@@ -19,9 +19,22 @@ interface Createmessage {
   props: PageStateProps;
 }
 
+interface ICreatemessageProps {
+
+}
+
+interface ICreatemessageState {
+  title: string;
+  description: string;
+  dateSel: string;
+  phoneNumber: number;
+  status: string;
+  files: Array<any>;
+}
+
 @inject('counterStore')
 @observer
-class Createmessage extends Component {
+class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> {
 
   /**
    * 指定config的类型声明为: Taro.Config
@@ -56,16 +69,18 @@ class Createmessage extends Component {
 
   handleClose () {}
 
+  onDateChange () {}
+
   render () {
     return (
       <View className='createMessage'>
         <AtForm>
           <AtInput
             name='value'
-            title='说明'
+            title='标题'
             type='text'
-            placeholder='请输入简要说明'
-            value={this.state.value}
+            placeholder='请输入标题'
+            value={this.state.title}
             onChange={this.handleChange.bind(this)}
           />
           <AtInput
@@ -73,11 +88,11 @@ class Createmessage extends Component {
             title='详情描述'
             type='text'
             placeholder='请输入详情描述'
-            value={this.state.value}
+            value={this.state.description}
             onChange={this.handleChange.bind(this)}
           />
           <View className="picker-box">
-            <Picker mode='date' onChange={this.onDateChange}>
+            <Picker value={''} mode='date' onChange={this.onDateChange}>
               <View className='picker'>
                 选择时间 {this.state.dateSel}
               </View>
@@ -89,7 +104,7 @@ class Createmessage extends Component {
             title='手机号码'
             type='phone'
             placeholder='请输入手机号码'
-            value={this.state.value6}
+            value={this.state.phoneNumber}
             onChange={this.handleChange.bind(this)}
           />
           <AtRadio
@@ -97,7 +112,7 @@ class Createmessage extends Component {
               { label: '租车', value: 'option1', desc: '如果你想租别人的车点击此处' },
               { label: '闲置', value: 'option2', desc: '如果你想把闲置的车租给别人点击此处' },
             ]}
-            value={this.state.value}
+            value={this.state.status}
             onClick={this.handleChange.bind(this)}
           />
         <View className='at-article__info'>
