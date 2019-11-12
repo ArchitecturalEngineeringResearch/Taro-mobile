@@ -1,0 +1,31 @@
+.list {
+
+  .filter {
+    color: #fff;
+    text-align: center;
+    font-size: 25px;
+    border-bottom: 1px solid #ccc;
+    padding: 20px;
+    background: #5677fc;
+  }
+
+  &-messages {
+    padding: 20px 0;
+    overflow: scroll;
+    height: 85vh;
+
+    .card {
+      margin-top: 10px;
+    }
+  }
+
+  .row-call {
+    padding-top: 30px;
+  }
+}
+
+.fab {
+  position: fixed;
+  right: 20px;
+  bottom: 10vh;
+}
