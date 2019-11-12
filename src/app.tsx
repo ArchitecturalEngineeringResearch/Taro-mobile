@@ -6,6 +6,7 @@ import 'taro-ui/dist/style/index.scss'
 
 import './icon.scss'
 import './app.scss'
+import CreateMessage from './pages/createMessage/createMessage'
 
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
@@ -66,7 +67,7 @@ class App extends Component {
   render () {
     return (
       <Provider store={store}>
-
+        <CreateMessage/>
       </Provider>
     )
   }
