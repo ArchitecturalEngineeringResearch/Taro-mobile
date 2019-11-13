@@ -27,7 +27,7 @@ interface ICreatemessageState {
   title: string;
   description: string;
   dateSel: string;
-  phoneNumber: number;
+  phoneNumber: number | string;
   status: string;
   files: Array<any>;
 }
@@ -36,6 +36,17 @@ interface ICreatemessageState {
 @observer
 class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> {
 
+  constructor (props) {
+    super(props)
+    this.state = {
+      title: '',
+      description: '',
+      dateSel: '',
+      phoneNumber: '',
+      status: '',
+      files: [],
+    }
+  }
   /**
    * 指定config的类型声明为: Taro.Config
    *
@@ -65,11 +76,17 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
 
   componentDidHide () { }
 
-  handleChange () {}
+  handleChange (status) {
+    this.setState({
+      status
+    })
+  }
 
   handleClose () {}
 
-  onDateChange () {}
+  onDateChange (e) {
+    console.log(e)
+  }
 
   render () {
     return (
@@ -109,8 +126,8 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
           />
           <AtRadio
             options={[
-              { label: '租车', value: 'option1', desc: '如果你想租别人的车点击此处' },
-              { label: '闲置', value: 'option2', desc: '如果你想把闲置的车租给别人点击此处' },
+              { label: '租车', value: 'NO_IDLE', desc: '如果你想租别人的车点击此处' },
+              { label: '闲置', value: 'IDLE', desc: '如果你想把闲置的车租给别人点击此处' },
             ]}
             value={this.state.status}
             onClick={this.handleChange.bind(this)}
