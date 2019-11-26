@@ -114,11 +114,11 @@ class List extends Component<IListProps, IListState> {
       type,
       time
     } = card
-    
+
     if (type === 'NEED') {
-      
+
     }
-    
+
     return <AtCard
       className='card'
       note=''
@@ -133,7 +133,7 @@ class List extends Component<IListProps, IListState> {
         />
       <View className="at-row row-call at-row__justify--between">
         <AtButton
-          className="at-col at-col-12" 
+          className="at-col at-col-12"
           type='primary'
           size='small'
         >拨打电话</AtButton>
@@ -148,13 +148,13 @@ class List extends Component<IListProps, IListState> {
       <View>
         <View className='list'>
           <View className='at-row filter'>
-            <View 
+            <View
               className='at-col'
               onClick={()=> {}}
             >
               最新消息
             </View>
-            <View 
+            <View
               className='at-col'
               onClick={()=> {}}
             >

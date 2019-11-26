@@ -42,11 +42,11 @@ class App extends Component {
     tabBar:{
       selectedColor: '#6190e8',
       list: [
-        { 
+        {
           pagePath: 'pages/list/list',
           text: '列表',
         },
-        { 
+        {
           pagePath: 'pages/user/user',
           text: '我的',
         },
