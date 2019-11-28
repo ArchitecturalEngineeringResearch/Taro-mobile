@@ -1,9 +1,8 @@
 import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Image } from '@tarojs/components'
+import { View, Image, Picker } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 import { AtNoticebar, AtCard, AtButton, AtFab } from 'taro-ui'
-
 
 import './list.scss'
 
@@ -32,7 +31,9 @@ interface IListProps {
 }
 
 interface IListState {
-  messagesData: Array<ICard>
+  messagesData: Array<ICard>;
+  selectedTonnage: number;
+  selectedTonnageIndex: number;
 }
 
 @inject('counterStore')
@@ -42,6 +43,8 @@ class List extends Component<IListProps, IListState> {
   constructor() {
     super()
     this.state = {
+      selectedTonnageIndex: 0,
+      selectedTonnage: 0,
       messagesData: [
         {
           time: '2019-2-2',
@@ -71,13 +74,6 @@ class List extends Component<IListProps, IListState> {
     }
   }
 
-  /**
-   * 指定config的类型声明为: Taro.Config
-   *
-   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-   */
   config: Config = {
     navigationBarTitleText: '首页'
   }
@@ -107,6 +103,12 @@ class List extends Component<IListProps, IListState> {
     })
   }
 
+  toDeviceType () {
+    Taro.navigateTo({
+      url: '/pages/deviceType/deviceType'
+    })
+  }
+
   renderCard(card: ICard) {
     const {
       title,
@@ -114,11 +116,11 @@ class List extends Component<IListProps, IListState> {
       type,
       time
     } = card
-    
+
     if (type === 'NEED') {
-      
+
     }
-    
+
     return <AtCard
       className='card'
       note=''
@@ -133,7 +135,7 @@ class List extends Component<IListProps, IListState> {
         />
       <View className="at-row row-call at-row__justify--between">
         <AtButton
-          className="at-col at-col-12" 
+          className="at-col at-col-12"
           type='primary'
           size='small'
         >拨打电话</AtButton>
@@ -141,30 +143,35 @@ class List extends Component<IListProps, IListState> {
     </AtCard>
   }
 
+  onChange (e) {
+    this.setState({
+
+    })
+  }
+
   render () {
-    // const { counterStore: { counter } } = this.props
-    const { messagesData } = this.state
+    const { messagesData, selectedTonnageIndex, selectedTonnage } = this.state
     return (
       <View>
         <View className='list'>
           <View className='at-row filter'>
-            <View 
+            <View
               className='at-col'
               onClick={()=> {}}
             >
               最新消息
             </View>
-            <View 
-              className='at-col'
-              onClick={()=> {}}
-            >
-              选择吨位
-            </View>
+            <Picker
+              mode='selector' value={selectedTonnageIndex} range={[]} onChange={(e)=> this.onChange(e)}>
+                <View className='picker'>
+                  吨位选择：{selectedTonnage}
+                </View>
+            </Picker>
             <View
-              onClick={()=> {}}
+              onClick={()=> {this.toDeviceType()}}
               className='at-col'
             >
-              选择价位
+              选择设备
             </View>
           </View>
           <AtNoticebar marquee>

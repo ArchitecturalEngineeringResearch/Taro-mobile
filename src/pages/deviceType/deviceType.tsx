@@ -1,0 +1,117 @@
+import { ComponentType } from 'react'
+import Taro, { Component, Config } from '@tarojs/taro'
+import { View } from '@tarojs/components'
+import { AtGrid, AtTabs, AtTabsPane } from "taro-ui"
+import { observer, inject } from '@tarojs/mobx'
+
+import './deviceType.scss'
+import deviceTypes from './deviceTypes'
+
+type PageStateProps = {
+  counterStore: {
+    counter: number,
+    increment: Function,
+    decrement: Function,
+    incrementAsync: Function
+  }
+}
+
+interface Devicetype {
+  props: PageStateProps;
+}
+interface IDevicetypeProps {
+
+}
+
+interface IDevicetypeState {
+  currentTabs: number
+}
+
+@inject('counterStore')
+@observer
+class Devicetype extends Component <IDevicetypeProps, IDevicetypeState>{
+  constructor() {
+    super()
+    this.state = {
+      currentTabs: 0,
+    }
+  }
+  /**
+   * 指定config的类型声明为: Taro.Config
+   *
+   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
+   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
+   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
+   */
+  config: Config = {
+    navigationBarTitleText: '选择设备类型'
+  }
+
+  componentWillMount () { }
+
+  componentWillReact () {
+    console.log('componentWillReact')
+  }
+
+  componentDidMount () { }
+
+  componentWillUnmount () { }
+
+  componentDidShow () { }
+
+  componentDidHide () { }
+
+  handleClick (value) {
+    this.setState({
+      currentTabs: value
+    })
+  }
+
+  handleClickAtGrid (item: object) {
+    console.log(item)
+  }
+
+  render () {
+    return (
+      <View className='deviceType'>
+        <AtTabs
+          current={this.state.currentTabs}
+          scroll
+          tabList={[
+            { title: '筑养路机械' },
+            { title: '土方机械' },
+            { title: '混凝土机械' },
+            { title: '桩工机械' },
+            { title: '起重机械' },
+            { title: '高空作业' },
+            { title: '工业车辆' }
+          ]}
+          onClick={this.handleClick.bind(this)}>
+          <AtTabsPane current={this.state.currentTabs} index={0}>
+          <AtGrid data={deviceTypes.筑养路机械} onClick={this.handleClickAtGrid.bind(this)} />
+          </AtTabsPane>
+          <AtTabsPane current={this.state.currentTabs} index={1}>
+          <AtGrid data={deviceTypes.土方机械} onClick={this.handleClickAtGrid.bind(this)}/>
+          </AtTabsPane>
+          <AtTabsPane current={this.state.currentTabs} index={2}>
+          <AtGrid data={deviceTypes.混凝土机械} onClick={this.handleClickAtGrid.bind(this)}/>
+          </AtTabsPane>
+          <AtTabsPane current={this.state.currentTabs} index={3}>
+          <AtGrid data={deviceTypes.桩工机械} onClick={this.handleClickAtGrid.bind(this)}/>
+          </AtTabsPane>
+          <AtTabsPane current={this.state.currentTabs} index={4}>
+          <AtGrid data={deviceTypes.起重机械} onClick={this.handleClickAtGrid.bind(this)}/>
+          </AtTabsPane>
+          <AtTabsPane current={this.state.currentTabs} index={5}>
+          <AtGrid data={deviceTypes.高空作业} onClick={this.handleClickAtGrid.bind(this)}/>
+          </AtTabsPane>
+          <AtTabsPane current={this.state.currentTabs} index={6}>
+          <AtGrid data={deviceTypes.工业车辆} onClick={this.handleClickAtGrid.bind(this)}/>
+          </AtTabsPane>
+        </AtTabs>
+      </View>
+    )
+  }
+}
+
+export default Devicetype  as ComponentType
