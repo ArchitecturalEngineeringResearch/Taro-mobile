@@ -1,15 +1,14 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { Provider } from '@tarojs/mobx'
 
-import counterStore from './store/counter'
+import deviceTypeStore from './store/deviceType'
 import 'taro-ui/dist/style/index.scss'
 
 import './icon.scss'
 import './app.scss'
-import CreateMessage from './pages/createMessage/createMessage'
 
 const store = {
-  counterStore
+  deviceTypeStore,
 }
 
 class App extends Component {
@@ -54,7 +53,6 @@ class App extends Component {
   render () {
     return (
       <Provider store={store}>
-        <CreateMessage/>
       </Provider>
     )
   }

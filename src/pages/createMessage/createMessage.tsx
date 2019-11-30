@@ -7,12 +7,7 @@ import { AtForm, AtInput, AtRadio, AtButton, AtImagePicker } from 'taro-ui'
 import './createMessage.scss'
 
 type PageStateProps = {
-  counterStore: {
-    counter: number,
-    increment: Function,
-    decrement: Function,
-    incrementAsync: Function
-  }
+
 }
 
 interface Createmessage {
@@ -32,7 +27,6 @@ interface ICreatemessageState {
   files: Array<any>;
 }
 
-@inject('counterStore')
 @observer
 class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> {
 
