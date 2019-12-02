@@ -70,6 +70,15 @@ class List extends Component<IListProps, IListState> {
     this.nextPage()
   }
 
+  componentDidShow() {
+    this.setState({
+      currentPage: 1,
+      messagesData: []
+    },()=> {
+      this.nextPage()
+    })
+  }
+
   filterHandle () {
 
   }
@@ -77,10 +86,14 @@ class List extends Component<IListProps, IListState> {
   nextPage () {
     const { messagesData, pageSzie, currentPage } = this.state
     const { currentType } = this.props.deviceTypeStore
+    let deviceType = ''
+
+    if(currentType != '全部') {
+      deviceType = currentType
+    }
+
     ListApi.getNextPage({
-      conditions: {
-        deviceType: currentType
-      },
+      deviceType,
       page: currentPage,
       size: pageSzie
     }).then((res)=> {
