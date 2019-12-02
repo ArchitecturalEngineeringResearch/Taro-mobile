@@ -8,17 +8,15 @@ import './deviceType.scss'
 import deviceTypes from './deviceTypes'
 
 type PageStateProps = {
-  counterStore: {
-    counter: number,
-    increment: Function,
-    decrement: Function,
-    incrementAsync: Function
+  deviceTypeStore: {
+    setCurrentType: Function
   }
 }
 
 interface Devicetype {
   props: PageStateProps;
 }
+
 interface IDevicetypeProps {
 
 }
@@ -27,11 +25,11 @@ interface IDevicetypeState {
   currentTabs: number
 }
 
-@inject('counterStore')
+@inject('deviceTypeStore')
 @observer
 class Devicetype extends Component <IDevicetypeProps, IDevicetypeState>{
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       currentTabs: 0,
     }
@@ -62,13 +60,18 @@ class Devicetype extends Component <IDevicetypeProps, IDevicetypeState>{
   componentDidHide () { }
 
   handleClick (value) {
+    if(value === 0) {
+      this.props.deviceTypeStore.setCurrentType('全部')
+      Taro.navigateBack({ delta: 1 })
+    }
     this.setState({
       currentTabs: value
     })
   }
 
-  handleClickAtGrid (item: object) {
-    console.log(item)
+  handleClickAtGrid (item: any) {
+    this.props.deviceTypeStore.setCurrentType(item.value)
+    Taro.navigateBack({ delta: 1 })
   }
 
   render () {
@@ -78,6 +81,7 @@ class Devicetype extends Component <IDevicetypeProps, IDevicetypeState>{
           current={this.state.currentTabs}
           scroll
           tabList={[
+            { title: '全部' },
             { title: '筑养路机械' },
             { title: '土方机械' },
             { title: '混凝土机械' },
@@ -88,24 +92,27 @@ class Devicetype extends Component <IDevicetypeProps, IDevicetypeState>{
           ]}
           onClick={this.handleClick.bind(this)}>
           <AtTabsPane current={this.state.currentTabs} index={0}>
-          <AtGrid data={deviceTypes.筑养路机械} onClick={this.handleClickAtGrid.bind(this)} />
+          <AtGrid data={[]}/>
           </AtTabsPane>
           <AtTabsPane current={this.state.currentTabs} index={1}>
-          <AtGrid data={deviceTypes.土方机械} onClick={this.handleClickAtGrid.bind(this)}/>
+          <AtGrid data={deviceTypes.筑养路机械} onClick={this.handleClickAtGrid.bind(this)} />
           </AtTabsPane>
           <AtTabsPane current={this.state.currentTabs} index={2}>
-          <AtGrid data={deviceTypes.混凝土机械} onClick={this.handleClickAtGrid.bind(this)}/>
+          <AtGrid data={deviceTypes.土方机械} onClick={this.handleClickAtGrid.bind(this)}/>
           </AtTabsPane>
           <AtTabsPane current={this.state.currentTabs} index={3}>
-          <AtGrid data={deviceTypes.桩工机械} onClick={this.handleClickAtGrid.bind(this)}/>
+          <AtGrid data={deviceTypes.混凝土机械} onClick={this.handleClickAtGrid.bind(this)}/>
           </AtTabsPane>
           <AtTabsPane current={this.state.currentTabs} index={4}>
-          <AtGrid data={deviceTypes.起重机械} onClick={this.handleClickAtGrid.bind(this)}/>
+          <AtGrid data={deviceTypes.桩工机械} onClick={this.handleClickAtGrid.bind(this)}/>
           </AtTabsPane>
           <AtTabsPane current={this.state.currentTabs} index={5}>
-          <AtGrid data={deviceTypes.高空作业} onClick={this.handleClickAtGrid.bind(this)}/>
+          <AtGrid data={deviceTypes.起重机械} onClick={this.handleClickAtGrid.bind(this)}/>
           </AtTabsPane>
           <AtTabsPane current={this.state.currentTabs} index={6}>
+          <AtGrid data={deviceTypes.高空作业} onClick={this.handleClickAtGrid.bind(this)}/>
+          </AtTabsPane>
+          <AtTabsPane current={this.state.currentTabs} index={7}>
           <AtGrid data={deviceTypes.工业车辆} onClick={this.handleClickAtGrid.bind(this)}/>
           </AtTabsPane>
         </AtTabs>
