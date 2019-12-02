@@ -1,12 +1,11 @@
 import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { observer, inject } from '@tarojs/mobx'
+import { observer } from '@tarojs/mobx'
 import { AtAvatar, AtDivider } from 'taro-ui'
 
 import './user.scss'
 
-@inject('counterStore')
 @observer
 class User extends Component {
 

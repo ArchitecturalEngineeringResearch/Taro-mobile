@@ -1,17 +1,15 @@
 import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Image, Picker } from '@tarojs/components'
+import { View, Image } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 import { AtNoticebar, AtCard, AtButton, AtFab } from 'taro-ui'
 
 import './list.scss'
+import { ListApi } from '../../api/index'
 
 type PageStateProps = {
-  counterStore: {
-    counter: number,
-    increment: Function,
-    decrement: Function,
-    incrementAsync: Function
+  deviceTypeStore: {
+    currentType: string
   }
 }
 
@@ -34,43 +32,22 @@ interface IListState {
   messagesData: Array<ICard>;
   selectedTonnage: number;
   selectedTonnageIndex: number;
+  currentPage: number,
+  pageSzie: number,
 }
 
-@inject('counterStore')
+@inject('deviceTypeStore')
 @observer
 class List extends Component<IListProps, IListState> {
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       selectedTonnageIndex: 0,
       selectedTonnage: 0,
-      messagesData: [
-        {
-          time: '2019-2-2',
-          title: '谁他妈买小米儿啊',
-          description: '前端数据流方案包括了 flux, redux 和 mobx. 在其中数据存储的地方, 就叫做 store.',
-          type: 'IDLE'
-        },
-        {
-          time: '2019-2-2',
-          title: '谁他妈买小米儿啊',
-          description: '前端数据流方案包括了 flux, redux 和 mobx. 在其中数据存储的地方, 就叫做 store.',
-          type: 'IDLE'
-        },
-        {
-          time: '2019-2-2',
-          title: '谁他妈买小米儿啊',
-          description: '前端数据流方案包括了 flux, redux 和 mobx. 在其中数据存储的地方, 就叫做 store.',
-          type: 'IDLE'
-        },
-        {
-          time: '2019-2-2',
-          title: '谁他妈买小米儿啊',
-          description: '前端数据流方案包括了 flux, redux 和 mobx. 在其中数据存储的地方, 就叫做 store.',
-          type: 'IDLE'
-        }
-      ]
+      currentPage: 1,
+      pageSzie: 5,
+      messagesData: []
     }
   }
 
@@ -81,20 +58,50 @@ class List extends Component<IListProps, IListState> {
   componentWillMount () {
   }
 
+  componentDidMount () {
+    this.nextPage()
+  }
+
   componentWillReact () {
     console.log('componentWillReact')
   }
 
-  componentDidMount () {}
+  onReachBottom() {
+    this.nextPage()
+  }
 
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
+  componentDidShow() {
+    this.setState({
+      currentPage: 1,
+      messagesData: []
+    },()=> {
+      this.nextPage()
+    })
+  }
 
   filterHandle () {
 
+  }
+
+  nextPage () {
+    const { messagesData, pageSzie, currentPage } = this.state
+    const { currentType } = this.props.deviceTypeStore
+    let deviceType = ''
+
+    if(currentType != '全部') {
+      deviceType = currentType
+    }
+
+    ListApi.getNextPage({
+      deviceType,
+      page: currentPage,
+      size: pageSzie
+    }).then((res)=> {
+      this.setState({
+        currentPage: currentPage + 1,
+        messagesData: messagesData.concat(res.data as any)
+      })
+    })
   }
 
   toCreateMessage () {
@@ -143,14 +150,9 @@ class List extends Component<IListProps, IListState> {
     </AtCard>
   }
 
-  onChange (e) {
-    this.setState({
-
-    })
-  }
-
   render () {
-    const { messagesData, selectedTonnageIndex, selectedTonnage } = this.state
+    const { messagesData } = this.state
+    const { deviceTypeStore: {currentType} } = this.props
     return (
       <View>
         <View className='list'>
@@ -161,17 +163,11 @@ class List extends Component<IListProps, IListState> {
             >
               最新消息
             </View>
-            <Picker
-              mode='selector' value={selectedTonnageIndex} range={[]} onChange={(e)=> this.onChange(e)}>
-                <View className='picker'>
-                  吨位选择：{selectedTonnage}
-                </View>
-            </Picker>
             <View
               onClick={()=> {this.toDeviceType()}}
               className='at-col'
             >
-              选择设备
+              选择设备: {currentType}
             </View>
           </View>
           <AtNoticebar marquee>
