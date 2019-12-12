@@ -1,6 +1,6 @@
 import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Image } from '@tarojs/components'
+import { View, Image, Swiper, SwiperItem } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 import { AtNoticebar, AtCard, AtButton, AtFab } from 'taro-ui'
 
@@ -14,7 +14,9 @@ type PageStateProps = {
 }
 
 interface ICard {
-  time: string,
+  created: string,
+  status: string,
+  endDate: string,
   title: string,
   description: string,
   type: 'NEED' | 'IDLE',
@@ -127,28 +129,42 @@ class List extends Component<IListProps, IListState> {
     const {
       title,
       description,
-      type,
-      time,
+      endDate,
       phoneNumber,
+      status,
+      type,
+      created
     } = card
-
-    if (type === 'NEED') {
-
-    }
 
     return <AtCard
       className='card'
-      note=''
-      extra={time}
+      note={`${endDate} 截止-${type}`}
+      extra={created}
       key={title}
       title={title}
-      thumb='http://img10.360buyimg.com/jdphoto/s72x72_jfs/t5872/209/5240187906/2872/8fa98cd/595c3b2aN4155b931.png'
+      thumb={status == 'IDLE' ? 'http://q2bvifwjn.bkt.clouddn.com/hornicon.png' : 'http://q2bvifwjn.bkt.clouddn.com/BTCicon.png'}
     >
     {description}
-      <Image
-        className='img'
-        src='https://camo.githubusercontent.com/3e1b76e514b895760055987f164ce6c95935a3aa/687474703a2f2f73746f726167652e333630627579696d672e636f6d2f6d74642f686f6d652f6c6f676f2d3278313531333833373932363730372e706e67'
-      />
+      <Swiper
+        className='swiper-h'
+        indicatorColor='#999'
+        indicatorActiveColor='#333'
+        circular
+        indicatorDots
+        autoplay>
+        <SwiperItem className='swiper-item'>
+          <Image
+            className='img'
+            src='https://t7.baidu.com/it/u=1473459495,4243489015&fm=199&app=68&f=JPEG?w=750&h=750&s=9EB35D87438A1EE80E1134380300E040'
+          />
+        </SwiperItem>
+        <SwiperItem className='swiper-item'>
+          <Image
+            className='img'
+            src='https://ss0.bdstatic.com/-0U0b8Sm1A5BphGlnYG/kmarketingadslogo/0c192ad67cccebb67bbcaef7804f9674_259_194.jpg'
+          />
+        </SwiperItem>
+      </Swiper>
       <View className="at-row row-call at-row__justify--between">
         <AtButton
           className="at-col at-col-12"
