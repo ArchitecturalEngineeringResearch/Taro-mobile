@@ -19,20 +19,30 @@ class App extends Component {
       'pages/user/user',
       'pages/deviceType/deviceType',
     ],
+    permission: {
+      'scope.userLocation': {
+        desc: '位置将用于通知附近的浏览者'
+      }
+    },
     window: {
       backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
+      navigationBarBackgroundColor: '#FE7F2D',
       navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
+      navigationBarTextStyle: 'white'
     },
     tabBar:{
-      selectedColor: '#6190e8',
+      color: '#000',
+      selectedColor: '#FE7F2D',
       list: [
         {
+          iconPath: 'resources/5048271.png',
+          selectedIconPath: 'resources/504827.png',
           pagePath: 'pages/list/list',
-          text: '列表',
+          text: '主页',
         },
         {
+          iconPath: 'resources/5048761.png',
+          selectedIconPath: 'resources/504876.png',
           pagePath: 'pages/user/user',
           text: '我的',
         },
@@ -40,7 +50,8 @@ class App extends Component {
     }
   }
 
-  componentDidMount () {}
+  componentDidMount () {
+  }
 
   componentDidShow () {}
 
