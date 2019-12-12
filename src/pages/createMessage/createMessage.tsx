@@ -120,9 +120,17 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
       _.forEach(validate, (item)=> {
         const [ firstMessage ] = item
         Taro.atMessage({
-          message: `消息通知: ${firstMessage}`,
+          message: `错误通知: ${firstMessage}`,
           type: 'error',
         })
+      })
+      return
+    }
+
+    if(type == '全部') {
+      Taro.atMessage({
+        message: `错误通知: 请选择设备类型`,
+        type: 'error',
       })
       return
     }
