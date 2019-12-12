@@ -4,8 +4,10 @@ import { View, Picker } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 import { AtForm, AtInput, AtRadio, AtButton, AtImagePicker, AtMessage } from 'taro-ui'
 
+import validation from './validation'
 import './createMessage.scss'
 import { MessageApi } from '../../api'
+import _ from 'lodash'
 
 type PageStateProps = {
   deviceTypeStore: {
@@ -22,7 +24,7 @@ interface ICreatemessageProps {
 
 }
 
-interface ICreatemessageState {
+export interface ICreatemessageState {
   title: string;
   description: string;
   dateSel: string;  //到期时间
@@ -113,6 +115,17 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
       files: photos
     } = this.state
 
+    const validate = validation(this.state)
+    if(validate) {
+      _.forEach(validate, (item)=> {
+        const [ firstMessage ] = item
+        Taro.atMessage({
+          message: `消息通知: ${firstMessage}`,
+          type: 'error',
+        })
+      })
+      return
+    }
 
     MessageApi.createMessage({
       type,
@@ -129,7 +142,9 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
         'message': '发送成功！',
         'type': 'success',
       })
-      Taro.navigateBack({ delta: 1 })
+      setTimeout(()=> {
+        Taro.navigateBack({ delta: 1 })
+      }, 2000)
     })
   }
 
@@ -178,7 +193,7 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
           <View className="picker-box">
             <Picker value={''} mode='date' onChange={this.onDateChange}>
               <View className='picker'>
-                选择时间 {this.state.dateSel}
+              <View className='endTime'>截止时间</View>{this.state.dateSel}
               </View>
             </Picker>
           </View>
