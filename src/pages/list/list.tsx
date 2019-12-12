@@ -3,6 +3,7 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Image, Swiper, SwiperItem } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 import { AtNoticebar, AtCard, AtButton, AtFab } from 'taro-ui'
+import moment from 'moment'
 
 import './list.scss'
 import { ListApi } from '../../api/index'
@@ -138,8 +139,8 @@ class List extends Component<IListProps, IListState> {
 
     return <AtCard
       className='card'
-      note={`${endDate} 截止-${type}`}
-      extra={created}
+      note={`${status == 'IDLE' ? '闲置' : '需要' } ${type}/${endDate} 截止`}
+      extra={moment(created).format('YYYY-MM-DD')}
       key={title}
       title={title}
       thumb={status == 'IDLE' ? 'http://q2bvifwjn.bkt.clouddn.com/hornicon.png' : 'http://q2bvifwjn.bkt.clouddn.com/BTCicon.png'}
