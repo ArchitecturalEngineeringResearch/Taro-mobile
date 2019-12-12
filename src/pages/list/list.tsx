@@ -87,6 +87,19 @@ class List extends Component<IListProps, IListState> {
 
   }
 
+  onPullDownRefresh() {
+    this.setState({
+      currentPage: 1,
+      messagesData: []
+    },()=> {
+      this.nextPage()
+    })
+
+    setTimeout(()=> {
+      Taro.stopPullDownRefresh()
+    },1000)
+  }
+
   nextPage () {
     const { messagesData, pageSzie, currentPage } = this.state
     const { currentType } = this.props.deviceTypeStore

@@ -28,7 +28,8 @@ class App extends Component {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#FE7F2D',
       navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'white'
+      navigationBarTextStyle: 'white',
+      enablePullDownRefresh: true
     },
     tabBar:{
       color: '#000',
@@ -51,6 +52,9 @@ class App extends Component {
   }
 
   componentDidMount () {
+    Taro.getUserInfo({}).then((userInfo)=> {
+      console.log(userInfo)
+    })
   }
 
   componentDidShow () {}
