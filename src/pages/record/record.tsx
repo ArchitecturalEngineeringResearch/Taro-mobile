@@ -1,8 +1,7 @@
 import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { AtList, AtListItem } from "taro-ui"
-import { observer, inject } from '@tarojs/mobx'
+import { observer } from '@tarojs/mobx'
 
 import './record.scss'
 
@@ -19,11 +18,18 @@ interface IListProps {
 }
 
 interface IListState {
-
+  recordDatas: Array<any>
 }
 
 @observer
 class Record extends Component<IListProps, IListState> {
+
+  constructor(props){
+    super(props)
+    this.state = {
+      recordDatas: []
+    }
+  }
 
   /**
    * 指定config的类型声明为: Taro.Config
@@ -53,13 +59,13 @@ class Record extends Component<IListProps, IListState> {
   render () {
     return (
       <View className='record'>
-        <AtList>
-          <AtListItem
-            note='描述信息'
-            title='标题文字标题文字标题文字标题文字标题文字'
-            extraText='详细信息详细信息详细信息详细信息'
-          />
-        </AtList>
+        <View className="record-item">
+          <View className='record-item-content'>
+            <View className="record-item__info-title"></View>
+            <View className="record-item__info-note"></View>
+          </View>
+          <View className="record-item-extra"></View>
+        </View>
       </View>
     )
   }
