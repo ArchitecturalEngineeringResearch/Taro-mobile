@@ -14,9 +14,10 @@ const store = {
 class App extends Component {
   config: Config = {
     pages: [
+      'pages/record/record',
       'pages/list/list',
-      'pages/createMessage/createMessage',
       'pages/user/user',
+      'pages/createMessage/createMessage',
       'pages/deviceType/deviceType',
     ],
     permission: {
@@ -52,9 +53,7 @@ class App extends Component {
   }
 
   componentDidMount () {
-    Taro.getUserInfo({}).then((userInfo)=> {
-      console.log(userInfo)
-    })
+
   }
 
   componentDidShow () {}
