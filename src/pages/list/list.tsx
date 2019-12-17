@@ -16,11 +16,11 @@ type PageStateProps = {
 
 interface ICard {
   created: string,
-  status: string,
+  status: 'NEED' | 'IDLE',
   endDate: string,
   title: string,
   description: string,
-  type: 'NEED' | 'IDLE',
+  type: string,
   phoneNumber: string | number
 }
 

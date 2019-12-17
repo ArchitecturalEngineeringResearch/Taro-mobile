@@ -14,8 +14,8 @@ const store = {
 class App extends Component {
   config: Config = {
     pages: [
-      'pages/record/record',
       'pages/list/list',
+      'pages/record/record',
       'pages/user/user',
       'pages/createMessage/createMessage',
       'pages/deviceType/deviceType',
