@@ -1,10 +1,9 @@
 .picker {
   margin-right: 16rpx;
-  width: 172rpx;
   font-size: 32rpx;
   line-height: 1.5;
   vertical-align: middle;
-  text-align: left;  
+  text-align: left;
 }
 
 .picker-box {
@@ -36,4 +35,37 @@
 
 .published {
   margin-top: 50px;
+}
+
+
+.createMessage {
+
+  .endTime {
+    margin-right: 16px;
+    width: 172px;
+    display: inline-block;
+  }
+
+  .device-type {
+    font-size: 24px;
+    margin-left: 32px;
+    display: flex;
+    align-items: center;
+  }
+
+  .device-type-box {
+    padding: 10px 0;
+  }
+
+  .device-type-icon {
+    align-items: center;
+    font-size: 30px;
+    float: right;
+    margin-right: 10px;
+    color: #ff9c22;
+
+    .at-icon-chevron-right {
+      vertical-align: 0%
+    }
+  }
 }

@@ -5,18 +5,37 @@
     text-align: center;
     font-size: 25px;
     border-bottom: 1px solid #ccc;
-    padding: 20px;
-    background: #5677fc;
+    padding: 2vh;
+    background: #FE7F2D;
   }
 
   &-messages {
     padding: 20px 0;
     overflow: scroll;
-    height: 85vh;
 
     .card {
       margin-top: 10px;
+      overflow: hidden;
+
+      .img {
+        width: 100%;
+        border-radius: 8px;
+      }
+
+      .swiper-h {
+        margin: 5px 0;
+      }
+
+      .swiper-item {
+        display: flex;
+        align-items: center;
+        border-radius: 7px;
+      }
     }
+  }
+
+  .at-row {
+    width: initial;
   }
 
   .row-call {
@@ -24,8 +43,39 @@
   }
 }
 
+.list-messages {
+
+  .at-card {
+    border: 0 #d6e4ef solid;
+    position: relative;
+  }
+
+  .flag {
+    position: absolute;
+    z-index: 99;
+    width: 15vw;
+    height: 6.4vh;
+    right: -1rpx;
+    top: 162px;
+
+    .label {
+      position: absolute;
+      color: #fff;
+      top: 2.8vh;
+      left: 5vw;
+      margin: auto;
+    }
+
+    .img  {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
 .fab {
   position: fixed;
   right: 20px;
   bottom: 10vh;
+  z-index: 100;
 }

@@ -1,8 +1,9 @@
 import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Image } from '@tarojs/components'
+import { View, Image, Swiper, SwiperItem } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
-import { AtNoticebar, AtCard, AtButton, AtFab } from 'taro-ui'
+import { AtNoticebar, AtCard, AtButton, AtFab, AtMessage } from 'taro-ui'
+import moment from 'moment'
 
 import './list.scss'
 import { ListApi } from '../../api/index'
@@ -14,10 +15,13 @@ type PageStateProps = {
 }
 
 interface ICard {
-  time: string,
+  created: string,
+  status: string,
+  endDate: string,
   title: string,
   description: string,
-  type: 'NEED' | 'IDLE'
+  type: 'NEED' | 'IDLE',
+  phoneNumber: string | number
 }
 
 interface List {
@@ -34,6 +38,7 @@ interface IListState {
   selectedTonnageIndex: number;
   currentPage: number,
   pageSzie: number,
+  currentCity: string
 }
 
 @inject('deviceTypeStore')
@@ -47,7 +52,8 @@ class List extends Component<IListProps, IListState> {
       selectedTonnage: 0,
       currentPage: 1,
       pageSzie: 5,
-      messagesData: []
+      messagesData: [],
+      currentCity: '',
     }
   }
 
@@ -56,6 +62,7 @@ class List extends Component<IListProps, IListState> {
   }
 
   componentWillMount () {
+
   }
 
   componentDidMount () {
@@ -71,6 +78,7 @@ class List extends Component<IListProps, IListState> {
   }
 
   componentDidShow() {
+    this.getCity()
     this.setState({
       currentPage: 1,
       messagesData: []
@@ -81,6 +89,24 @@ class List extends Component<IListProps, IListState> {
 
   filterHandle () {
 
+  }
+
+
+  getCity () {
+
+  }
+
+  onPullDownRefresh() {
+    this.setState({
+      currentPage: 1,
+      messagesData: []
+    },()=> {
+      this.nextPage()
+    })
+
+    setTimeout(()=> {
+      Taro.stopPullDownRefresh()
+    },1000)
   }
 
   nextPage () {
@@ -105,8 +131,26 @@ class List extends Component<IListProps, IListState> {
   }
 
   toCreateMessage () {
-    Taro.navigateTo({
-      url: '/pages/createMessage/createMessage'
+    const userInfo = Taro.getStorage({
+      key:'userInfo',
+    })
+    const { navigateTo, switchTab,  atMessage } = Taro
+    userInfo.then(()=> {
+      navigateTo({
+        url: '/pages/createMessage/createMessage'
+      })
+
+    }).catch(() => {
+      atMessage({
+        message: `请先登陆`,
+        type: 'error',
+      })
+
+      setTimeout(()=> {
+        switchTab({
+          url: '/pages/user/user'
+        })
+      }, 1000)
     })
   }
 
@@ -116,42 +160,71 @@ class List extends Component<IListProps, IListState> {
     })
   }
 
+  phoneCall (phoneNumber) {
+    Taro.makePhoneCall({
+      phoneNumber
+    })
+  }
+
   renderCard(card: ICard) {
     const {
       title,
       description,
+      endDate,
+      phoneNumber,
+      status,
       type,
-      time
+      created
     } = card
 
-    if (type === 'NEED') {
-
-    }
+    const flag = status == 'IDLE' ? 'http://q2bvifwjn.bkt.clouddn.com/true%20%28123.png' : 'http://q2bvifwjn.bkt.clouddn.com/%E9%9C%80%E6%B1%82%E6%97%97%E5%B8%9C'
 
     return <AtCard
       className='card'
-      note=''
-      extra={time}
+      note={`${status == 'IDLE' ? '闲置' : '需要' } ${type}/${endDate} 截止`}
+      extra={moment(created).format('YYYY-MM-DD')}
+      key={title}
       title={title}
-      thumb='http://img10.360buyimg.com/jdphoto/s72x72_jfs/t5872/209/5240187906/2872/8fa98cd/595c3b2aN4155b931.png'
+      thumb={status == 'IDLE' ? 'http://q2bvifwjn.bkt.clouddn.com/hornicon.png' : 'http://q2bvifwjn.bkt.clouddn.com/BTCicon.png'}
     >
-    {description}
-    <Image
-          style='width: 300px;height: 100px;background: #fff;'
-          src='https://camo.githubusercontent.com/3e1b76e514b895760055987f164ce6c95935a3aa/687474703a2f2f73746f726167652e333630627579696d672e636f6d2f6d74642f686f6d652f6c6f676f2d3278313531333833373932363730372e706e67'
-        />
+      {description}
+      <View className='flag'>
+        <Image className='img' src={flag}/>
+      </View>
+      <Swiper
+        className='swiper-h'
+        indicatorColor='#999'
+        indicatorActiveColor='#333'
+        circular
+        indicatorDots
+        autoplay>
+        <SwiperItem className='swiper-item'>
+          <Image
+            className='img'
+            src='https://t7.baidu.com/it/u=1473459495,4243489015&fm=199&app=68&f=JPEG?w=750&h=750&s=9EB35D87438A1EE80E1134380300E040'
+          />
+        </SwiperItem>
+        <SwiperItem className='swiper-item'>
+          <Image
+            className='img'
+            src='https://ss0.bdstatic.com/-0U0b8Sm1A5BphGlnYG/kmarketingadslogo/0c192ad67cccebb67bbcaef7804f9674_259_194.jpg'
+          />
+        </SwiperItem>
+      </Swiper>
       <View className="at-row row-call at-row__justify--between">
         <AtButton
           className="at-col at-col-12"
           type='primary'
           size='small'
+          onClick={()=> {this.phoneCall(String(phoneNumber))}}
         >拨打电话</AtButton>
       </View>
+      <AtMessage />
     </AtCard>
   }
 
   render () {
-    const { messagesData } = this.state
+    const { messagesData, currentCity } = this.state
     const { deviceTypeStore: {currentType} } = this.props
     return (
       <View>
@@ -161,7 +234,7 @@ class List extends Component<IListProps, IListState> {
               className='at-col'
               onClick={()=> {}}
             >
-              最新消息
+              当前信息来自:{currentCity}
             </View>
             <View
               onClick={()=> {this.toDeviceType()}}
@@ -171,7 +244,7 @@ class List extends Component<IListProps, IListState> {
             </View>
           </View>
           <AtNoticebar marquee>
-            这是 NoticeBar 通告栏，这是 NoticeBar 通告栏，这是 NoticeBar 通告栏
+            欢迎使用【工程酷】 欢迎使用【工程酷】 欢迎使用【工程酷】
           </AtNoticebar>
         </View>
         <View className="list-messages">

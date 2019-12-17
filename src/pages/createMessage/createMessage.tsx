@@ -2,13 +2,19 @@ import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Picker } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
-import { AtForm, AtInput, AtRadio, AtButton, AtImagePicker } from 'taro-ui'
+import { AtForm, AtInput, AtRadio, AtButton, AtImagePicker, AtMessage } from 'taro-ui'
 
+import validation from './validation'
 import './createMessage.scss'
+import { MessageApi } from '../../api'
+import _ from 'lodash'
 
 type PageStateProps = {
-
+  deviceTypeStore: {
+    currentType: string
+  }
 }
+
 
 interface Createmessage {
   props: PageStateProps;
@@ -18,21 +24,26 @@ interface ICreatemessageProps {
 
 }
 
-interface ICreatemessageState {
+export interface ICreatemessageState {
   title: string;
   description: string;
-  dateSel: string;
+  dateSel: string;  //到期时间
   phoneNumber: number | string;
   status: string;
   files: Array<any>;
+  lat: number;
+  lng: number;
 }
 
+@inject('deviceTypeStore')
 @observer
 class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> {
 
   constructor (props) {
     super(props)
     this.state = {
+      lat: 0,
+      lng: 0,
       title: '',
       description: '',
       dateSel: '',
@@ -41,18 +52,14 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
       files: [],
     }
   }
-  /**
-   * 指定config的类型声明为: Taro.Config
-   *
-   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-   */
+
   config: Config = {
     navigationBarTitleText: '首页'
   }
 
-  componentWillMount () { }
+  componentWillMount () {
+    this.getLocation()
+  }
 
   componentWillReact () {
     console.log('componentWillReact')
@@ -76,23 +83,112 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
     })
   }
 
+  getLocation() {
+    Taro.getLocation({}).then((res)=> {
+      const {latitude, longitude} = res
+      this.setState({
+        lat: latitude,
+        lng: longitude
+      })
+    })
+  }
+
   handleClose () {}
 
-  onDateChange (e) {
-    console.log(e)
+  onDateChange ({currentTarget}) {
+    this.setState({
+      dateSel: currentTarget.value
+    })
+  }
+
+  submit() {
+    const { currentType: type } = this.props.deviceTypeStore
+
+    const {
+      title,
+      description,
+      dateSel: endDate,
+      phoneNumber,
+      status,
+      lat: latitude,
+      lng: longitude,
+      files: photos
+    } = this.state
+
+    const validate = validation(this.state)
+    if(validate) {
+      _.forEach(validate, (item)=> {
+        const [ firstMessage ] = item
+        Taro.atMessage({
+          message: `错误通知: ${firstMessage}`,
+          type: 'error',
+        })
+      })
+      return
+    }
+
+    if(type == '全部') {
+      Taro.atMessage({
+        message: `错误通知: 请选择设备类型`,
+        type: 'error',
+      })
+      return
+    }
+
+    MessageApi.createMessage({
+      type,
+      title,
+      endDate,
+      phoneNumber,
+      description,
+      status,
+      latitude,
+      longitude,
+      photos
+    }).then(()=> {
+      Taro.atMessage({
+        'message': '发送成功！',
+        'type': 'success',
+      })
+      setTimeout(()=> {
+        Taro.navigateBack({ delta: 1 })
+      }, 2000)
+    })
+  }
+
+  toDeviceType () {
+    Taro.navigateTo({
+      url: '/pages/deviceType/deviceType'
+    })
   }
 
   render () {
+    const { currentType: type } = this.props.deviceTypeStore
     return (
       <View className='createMessage'>
+        <AtMessage />
         <AtForm>
+          <View className='at-row at-row__justify--between device-type-box'>
+            <View className='at-col at-col-5 device-type'>
+              当前选择的设备：{type}
+            </View>
+            <View className='at-col at-col-5'>
+              <View
+                className='device-type-icon'
+                onClick={()=> {this.toDeviceType()}}
+              >
+                选择设备
+                <View className='at-icon at-icon-chevron-right'></View>
+              </View>
+            </View>
+          </View>
           <AtInput
             name='value'
             title='标题'
             type='text'
             placeholder='请输入标题'
             value={this.state.title}
-            onChange={this.handleChange.bind(this)}
+            onChange={(title)=> this.setState({title})}
           />
           <AtInput
             name='value'
@@ -100,12 +196,12 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
             type='text'
             placeholder='请输入详情描述'
             value={this.state.description}
-            onChange={this.handleChange.bind(this)}
+            onChange={(description)=> this.setState({description})}
           />
           <View className="picker-box">
             <Picker value={''} mode='date' onChange={this.onDateChange}>
               <View className='picker'>
-                选择时间 {this.state.dateSel}
+              <View className='endTime'>截止时间</View>{this.state.dateSel}
               </View>
             </Picker>
           </View>
@@ -116,7 +212,7 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
             type='phone'
             placeholder='请输入手机号码'
             value={this.state.phoneNumber}
-            onChange={this.handleChange.bind(this)}
+            onChange={(phoneNumber)=> this.setState({phoneNumber})}
           />
           <AtRadio
             options={[
@@ -124,7 +220,7 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
               { label: '闲置', value: 'IDLE', desc: '如果你想把闲置的车租给别人点击此处' },
             ]}
             value={this.state.status}
-            onClick={this.handleChange.bind(this)}
+            onClick={(status)=> this.setState({status})}
           />
         <View className='at-article__info'>
           拍照或上传相册图片
@@ -142,7 +238,7 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
         </View>
         <View className='published at-row at-row__justify--center'>
           <View className='at-col at-col-5'>
-            <AtButton type='primary'>发布信息</AtButton>
+            <AtButton type='primary' onClick={this.submit.bind(this)}>发布信息</AtButton>
           </View>
         </View>
       </View>
