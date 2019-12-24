@@ -5,6 +5,7 @@ import { observer } from '@tarojs/mobx'
 import { AtAvatar, AtDivider, AtGrid, AtModal, AtModalHeader, AtModalContent, AtModalAction, AtMessage } from 'taro-ui'
 
 import './user.scss'
+import { UserApi } from '../../api/index'
 
 interface IListProps {
 
@@ -14,6 +15,7 @@ interface IListState {
   atModalIsOpened: boolean;
   avatarUrl: string;
   userName: string;
+  loading: boolean;
 }
 
 @observer
@@ -23,7 +25,8 @@ class User extends Component<IListProps, IListState> {
     this.state = {
       atModalIsOpened: false,
       avatarUrl: 'https://jdc.jd.com/img/200',
-      userName: '未登陆'
+      userName: '未登陆',
+      loading: false,
     }
   }
   /**
@@ -74,28 +77,54 @@ class User extends Component<IListProps, IListState> {
   }
 
   getUserInfo (res) {
-    const {setStorage, atMessage} = Taro
-    setStorage({ key: 'userInfo', data: res }).then(()=> {
-      this.setState({
-        atModalIsOpened: false
+    const { setStorage, atMessage, login, getUserInfo } = Taro
+    const { loading } = this.state
+    // 如果属于登陆中
+    if( loading ) {
+      return
+    }
+
+    this.setState({
+      loading: true
+    })
+
+    // 登陆获取 unionid session_key
+    login({}).then((loginRes: any)=> {
+      // 获取用户信息
+      getUserInfo({}).then((InfoRes)=> {
+        const { encryptedData, iv } = InfoRes
+        UserApi.login({
+          appid: 'wx71cbc64614fcaac6',
+          secret: 'b9895a8aa8dfa3916d4df748fd5c8c04',
+          jsCode: loginRes.code,
+          iv,
+          encryptedData
+        }).then(({data}: any)=> {
+          // 存储当前的微信号信息
+          setStorage({ key: 'userInfo', data }).then(()=> {
+            this.setState({
+              atModalIsOpened: false,
+              loading: false,
+            })
+
+            atMessage({
+              'message': '登陆成功！',
+              'type': 'success',
+            })
+            this.loadUserInfo()
+          })
+        })
       })
-      atMessage({
-        'message': '登陆成功！',
-        'type': 'success',
-      })
-      this.loadUserInfo()
     })
   }
 
   loadUserInfo () {
     Taro.getStorage({
       key: 'userInfo'
-    }).then(({data}:any)=> {
-      const {detail} = data
-
+    }).then(({data}: any)=> {
       this.setState({
-        userName: detail.userInfo.nickName,
-        avatarUrl: detail.userInfo.avatarUrl
+        userName: data.nickName,
+        avatarUrl: data.avatarUrl
       })
     }).catch(()=> {
       this.setState({
@@ -105,7 +134,7 @@ class User extends Component<IListProps, IListState> {
   }
 
   render () {
-    const { userName, avatarUrl, atModalIsOpened} = this.state
+    const { userName, avatarUrl, atModalIsOpened, loading} = this.state
     return (
       <View className='user'>
         <AtDivider content={userName} fontColor='#2d8cf0' lineColor='#2d8cf0' />
@@ -129,6 +158,7 @@ class User extends Component<IListProps, IListState> {
             <Button
               onGetUserInfo={this.getUserInfo.bind(this)}
               open-type="getUserInfo"
+              loading={loading}
             >
               立即登陆
             </Button>
