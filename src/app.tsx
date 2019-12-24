@@ -1,8 +1,9 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { Provider } from '@tarojs/mobx'
+import 'taro-ui/dist/style/index.scss'
 
 import deviceTypeStore from './store/deviceType'
-import 'taro-ui/dist/style/index.scss'
+
 
 import './icon.scss'
 import './app.scss'
@@ -12,6 +13,16 @@ const store = {
 }
 
 class App extends Component {
+  componentDidMount () {
+
+  }
+
+  componentDidShow () {}
+
+  componentDidHide () {}
+
+  componentDidCatchError () {}
+
   config: Config = {
     pages: [
       'pages/list/list',
@@ -53,15 +64,6 @@ class App extends Component {
     }
   }
 
-  componentDidMount () {
-
-  }
-
-  componentDidShow () {}
-
-  componentDidHide () {}
-
-  componentDidCatchError () {}
 
   // 在 App 类中的 render() 函数没有实际作用
   // 请勿修改此函数
