@@ -28,7 +28,6 @@ class App extends Component {
       'pages/list/list',
       'pages/record/record',
       'pages/user/user',
-      'pages/record/record',
       'pages/createMessage/createMessage',
       'pages/deviceType/deviceType',
     ],

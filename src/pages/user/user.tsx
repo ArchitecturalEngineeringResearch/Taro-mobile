@@ -29,22 +29,8 @@ class User extends Component<IListProps, IListState> {
       loading: false,
     }
   }
-  /**
-   * 指定config的类型声明为: Taro.Config
-   *
-   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-   */
-  config: Config = {
-    navigationBarTitleText: '首页'
-  }
 
   componentWillMount () { }
-
-  componentWillReact () {
-    console.log('componentWillReact')
-  }
 
   componentDidMount () {
     Taro.setNavigationBarTitle({
@@ -62,6 +48,17 @@ class User extends Component<IListProps, IListState> {
 
   componentDidHide () { }
 
+  /**
+   * 指定config的类型声明为: Taro.Config
+   *
+   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
+   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
+   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
+   */
+  config: Config = {
+    navigationBarTitleText: '首页'
+  }
+
   handleMenus(item) {
     console.log(item.value)
     switch (item.value) {
@@ -76,7 +73,7 @@ class User extends Component<IListProps, IListState> {
     }
   }
 
-  getUserInfo (res) {
+  getUserInfo () {
     const { setStorage, atMessage, login, getUserInfo } = Taro
     const { loading } = this.state
     // 如果属于登陆中
@@ -148,7 +145,8 @@ class User extends Component<IListProps, IListState> {
         <AtGrid onClick={this.handleMenus.bind(this)}className='menus' mode='rect' data={[{
           image: 'http://q2bvifwjn.bkt.clouddn.com/%E5%8F%91%E9%80%81%E8%AE%B0%E5%BD%95icon.png',
           value: '已发帖子'
-        }]}/>
+          }]}
+        />
         <AtModal isOpened={atModalIsOpened}>
           <AtModalHeader>欢迎使用【工程酷】</AtModalHeader>
           <AtModalContent>
@@ -157,14 +155,14 @@ class User extends Component<IListProps, IListState> {
           <AtModalAction>
             <Button
               onGetUserInfo={this.getUserInfo.bind(this)}
-              open-type="getUserInfo"
+              open-type='getUserInfo'
               loading={loading}
             >
               立即登陆
             </Button>
           </AtModalAction>
         </AtModal>
-        <AtMessage/>
+        <AtMessage />
       </View>
     )
   }

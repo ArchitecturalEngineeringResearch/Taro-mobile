@@ -3,11 +3,12 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Picker } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 import { AtForm, AtInput, AtRadio, AtButton, AtImagePicker, AtMessage } from 'taro-ui'
+import _ from 'lodash'
 
 import validation from './validation'
 import './createMessage.scss'
 import { MessageApi } from '../../api'
-import _ from 'lodash'
+
 
 type PageStateProps = {
   deviceTypeStore: {
@@ -134,25 +135,32 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
       })
       return
     }
+    const { getStorage} = Taro
 
-    MessageApi.createMessage({
-      type,
-      title,
-      endDate,
-      phoneNumber,
-      description,
-      status,
-      latitude,
-      longitude,
-      photos
-    }).then(()=> {
-      Taro.atMessage({
-        'message': '发送成功！',
-        'type': 'success',
+    getStorage({ key: 'userInfo' }).then(({data}: any)=> {
+      const { openId, unionId } = data
+
+      MessageApi.createMessage({
+        type,
+        title,
+        endDate,
+        phoneNumber,
+        description,
+        status,
+        latitude,
+        longitude,
+        photos,
+        openId,
+        unionId,
+      }).then(()=> {
+        Taro.atMessage({
+          'message': '发送成功！',
+          'type': 'success',
+        })
+        setTimeout(()=> {
+          Taro.navigateBack({ delta: 1 })
+        }, 2000)
       })
-      setTimeout(()=> {
-        Taro.navigateBack({ delta: 1 })
-      }, 2000)
     })
   }
 
@@ -198,8 +206,8 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
             value={this.state.description}
             onChange={(description)=> this.setState({description})}
           />
-          <View className="picker-box">
-            <Picker value={''} mode='date' onChange={this.onDateChange}>
+          <View className='picker-box'>
+            <Picker value='' mode='date' onChange={this.onDateChange}>
               <View className='picker'>
               <View className='endTime'>截止时间</View>{this.state.dateSel}
               </View>
