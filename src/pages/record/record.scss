@@ -1,0 +1,36 @@
+.record-item {
+  display: flex;
+  align-items: center;
+  -webkit-box-align: center;
+  padding: 25px;
+  border-bottom: 1PX solid #d6e4ef;
+
+  .record-item-content {
+    flex: 1;
+    -webkit-box-flex: 1;
+    overflow: hidden;
+    margin-right: .85333rem;
+  }
+
+  .record-item-extra {
+    flex: 0 0 5.01333rem;
+    -webkit-box-flex: 0;
+    width: 5.01333rem;
+    text-align: right;
+  }
+
+  .record-item__info-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: inherit;
+    font-size: inherit;
+    line-height: 1.5;
+  }
+
+  .record-item__info-note {
+    color: #999;
+    font-size: .59733rem;
+    line-height: 1.5;
+  }
+}

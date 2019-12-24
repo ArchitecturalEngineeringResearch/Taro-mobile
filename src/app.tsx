@@ -15,6 +15,7 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/list/list',
+      'pages/record/record',
       'pages/user/user',
       'pages/record/record',
       'pages/createMessage/createMessage',
