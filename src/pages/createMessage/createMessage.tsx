@@ -34,6 +34,7 @@ export interface ICreatemessageState {
   files: Array<any>;
   lat: number;
   lng: number;
+  loading: boolean
 }
 
 @inject('deviceTypeStore')
@@ -51,6 +52,7 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
       phoneNumber: '',
       status: '',
       files: [],
+      loading: false
     }
   }
 
@@ -136,7 +138,9 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
       return
     }
     const { getStorage} = Taro
-
+    this.setState({
+      loading: true
+    })
     getStorage({ key: 'userInfo' }).then(({data}: any)=> {
       const { openId, unionId } = data
 
@@ -172,6 +176,7 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
 
   render () {
     const { currentType: type } = this.props.deviceTypeStore
+    const { loading } = this.state
     return (
       <View className='createMessage'>
         <AtMessage />
@@ -246,7 +251,7 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
         </View>
         <View className='published at-row at-row__justify--center'>
           <View className='at-col at-col-5'>
-            <AtButton type='primary' onClick={this.submit.bind(this)}>发布信息</AtButton>
+            <AtButton disabled={loading} type='primary' onClick={this.submit.bind(this)}>发布信息</AtButton>
           </View>
         </View>
       </View>
