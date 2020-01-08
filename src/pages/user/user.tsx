@@ -5,6 +5,7 @@ import { observer } from '@tarojs/mobx'
 import { AtAvatar, AtDivider, AtGrid, AtModal, AtModalHeader, AtModalContent, AtModalAction, AtMessage } from 'taro-ui'
 
 import './user.scss'
+import { UserApi } from '../../api/index'
 
 interface IListProps {
 
@@ -14,6 +15,7 @@ interface IListState {
   atModalIsOpened: boolean;
   avatarUrl: string;
   userName: string;
+  loading: boolean;
 }
 
 @observer
@@ -23,25 +25,12 @@ class User extends Component<IListProps, IListState> {
     this.state = {
       atModalIsOpened: false,
       avatarUrl: 'https://jdc.jd.com/img/200',
-      userName: '未登陆'
+      userName: '未登陆',
+      loading: false,
     }
-  }
-  /**
-   * 指定config的类型声明为: Taro.Config
-   *
-   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-   */
-  config: Config = {
-    navigationBarTitleText: '首页'
   }
 
   componentWillMount () { }
-
-  componentWillReact () {
-    console.log('componentWillReact')
-  }
 
   componentDidMount () {
     Taro.setNavigationBarTitle({
@@ -59,6 +48,17 @@ class User extends Component<IListProps, IListState> {
 
   componentDidHide () { }
 
+  /**
+   * 指定config的类型声明为: Taro.Config
+   *
+   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
+   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
+   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
+   */
+  config: Config = {
+    navigationBarTitleText: '首页'
+  }
+
   handleMenus(item) {
     console.log(item.value)
     switch (item.value) {
@@ -73,29 +73,55 @@ class User extends Component<IListProps, IListState> {
     }
   }
 
-  getUserInfo (res) {
-    const {setStorage, atMessage} = Taro
-    setStorage({ key: 'userInfo', data: res }).then(()=> {
-      this.setState({
-        atModalIsOpened: false
+  getUserInfo () {
+    const { setStorage, atMessage, login, getUserInfo } = Taro
+    const { loading } = this.state
+    // 如果属于登陆中
+    if( loading ) {
+      return
+    }
+
+    this.setState({
+      loading: true
+    })
+
+    // 登陆获取 unionid session_key
+    login({}).then((loginRes: any)=> {
+      // 获取用户信息
+      getUserInfo({}).then((InfoRes)=> {
+        const { encryptedData, iv } = InfoRes
+        UserApi.login({
+          appid: 'wx71cbc64614fcaac6',
+          secret: 'b9895a8aa8dfa3916d4df748fd5c8c04',
+          jsCode: loginRes.code,
+          iv,
+          encryptedData
+        }).then(({data}: any)=> {
+          // 存储当前的微信号信息
+          setStorage({ key: 'userInfo', data }).then(()=> {
+            this.setState({
+              atModalIsOpened: false,
+              loading: false,
+            })
+
+            atMessage({
+              'message': '登陆成功！',
+              'type': 'success',
+            })
+            this.loadUserInfo()
+          })
+        })
       })
-      atMessage({
-        'message': '登陆成功！',
-        'type': 'success',
-      })
-      this.loadUserInfo()
     })
   }
 
   loadUserInfo () {
     Taro.getStorage({
       key: 'userInfo'
-    }).then(({data}:any)=> {
-      const {detail} = data
-
+    }).then(({data}: any)=> {
       this.setState({
-        userName: detail.userInfo.nickName,
-        avatarUrl: detail.userInfo.avatarUrl
+        userName: data.nickName,
+        avatarUrl: data.avatarUrl
       })
     }).catch(()=> {
       this.setState({
@@ -105,7 +131,7 @@ class User extends Component<IListProps, IListState> {
   }
 
   render () {
-    const { userName, avatarUrl, atModalIsOpened} = this.state
+    const { userName, avatarUrl, atModalIsOpened, loading} = this.state
     return (
       <View className='user'>
         <AtDivider content={userName} fontColor='#2d8cf0' lineColor='#2d8cf0' />
@@ -119,7 +145,8 @@ class User extends Component<IListProps, IListState> {
         <AtGrid onClick={this.handleMenus.bind(this)}className='menus' mode='rect' data={[{
           image: 'http://q2bvifwjn.bkt.clouddn.com/%E5%8F%91%E9%80%81%E8%AE%B0%E5%BD%95icon.png',
           value: '已发帖子'
-        }]}/>
+          }]}
+        />
         <AtModal isOpened={atModalIsOpened}>
           <AtModalHeader>欢迎使用【工程酷】</AtModalHeader>
           <AtModalContent>
@@ -128,13 +155,14 @@ class User extends Component<IListProps, IListState> {
           <AtModalAction>
             <Button
               onGetUserInfo={this.getUserInfo.bind(this)}
-              open-type="getUserInfo"
+              open-type='getUserInfo'
+              loading={loading}
             >
               立即登陆
             </Button>
           </AtModalAction>
         </AtModal>
-        <AtMessage/>
+        <AtMessage />
       </View>
     )
   }
