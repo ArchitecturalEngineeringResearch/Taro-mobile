@@ -1,10 +1,11 @@
 import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { AtButton, AtModal } from 'taro-ui'
+import { AtButton, AtModal, AtMessage } from 'taro-ui'
 import { observer } from '@tarojs/mobx'
 
 import './record.scss'
+import { MessageApi } from '../../api'
 
 type PageStateProps = {
 
@@ -16,6 +17,7 @@ interface ICard {
   title: string,
   description: string,
   status: 'NEED' | 'IDLE',
+  [key: string]: string
 }
 
 
@@ -41,13 +43,7 @@ class Record extends Component<IListProps, IListState> {
     this.state = {
       removeAtModal: false,
       current: {},
-      recordDatas: [{
-        title: '我叫李耀',
-        created: '2019-10-21',
-        description: '我需要一个台挖掘机我需要一个台挖掘机我需要一个台挖掘机我需要一个台挖掘机我需要一个台挖掘机',
-        type: '小型挖掘机',
-        status: 'NEED',
-      }]
+      recordDatas: []
     }
   }
 
@@ -62,7 +58,9 @@ class Record extends Component<IListProps, IListState> {
     navigationBarTitleText: '已发帖子'
   }
 
-  componentWillMount () { }
+  componentWillMount () {
+    this.getHistory()
+  }
 
   componentWillReact () {
     console.log('componentWillReact')
@@ -70,7 +68,16 @@ class Record extends Component<IListProps, IListState> {
 
 
   getHistory() {
+    const { getStorage} = Taro
 
+    getStorage({ key: 'userInfo' }).then(({data}: any)=> {
+      const { unionId } = data
+      MessageApi.getHistory({unionId}).then((res:any)=> {
+        this.setState({
+          recordDatas: res.data
+        })
+      })
+    })
   }
 
   removeHistory() {
@@ -84,8 +91,18 @@ class Record extends Component<IListProps, IListState> {
   }
 
   private handleConfirm () {
-    this.setState({
-      removeAtModal: false
+   const { current } = this.state
+   const { _id } = current
+    MessageApi.remove(_id).then(()=> {
+      this.setState({
+        removeAtModal: false
+      }, ()=> {
+        Taro.atMessage({
+          'message': '删除成功！',
+          'type': 'success',
+        })
+        this.getHistory()
+      })
     })
   }
 
@@ -104,11 +121,13 @@ class Record extends Component<IListProps, IListState> {
 
   render () {
     const { recordDatas, removeAtModal} = this.state
+
     return (
       <View className='record'>
+        <AtMessage />
         {
-          recordDatas.map((item,index)=>
-            <View className="record-item" key={index}>
+          recordDatas.map((item)=>
+            <View className="record-item" key={item.title}>
               <View className='record-item-content'>
                 <View className="record-item__info-title">
                   {item.title}
