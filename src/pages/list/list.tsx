@@ -16,11 +16,11 @@ type PageStateProps = {
 
 interface ICard {
   created: string,
-  status: string,
+  status: 'NEED' | 'IDLE',
   endDate: string,
   title: string,
   description: string,
-  type: 'NEED' | 'IDLE',
+  type: string,
   phoneNumber: string | number
 }
 
@@ -174,10 +174,11 @@ class List extends Component<IListProps, IListState> {
       phoneNumber,
       status,
       type,
-      created
+      created,
+      photos = []
     } = card
-
-    const flag = status == 'IDLE' ? 'http://q2bvifwjn.bkt.clouddn.com/true%20%28123.png' : 'http://q2bvifwjn.bkt.clouddn.com/%E9%9C%80%E6%B1%82%E6%97%97%E5%B8%9C'
+    debugger
+    const flag = status == 'IDLE' ? 'http://files.guangzhaiziben.com/true (123.png' : 'http://files.guangzhaiziben.com/%E9%9C%80%E6%B1%82%E6%97%97%E5%B8%9C'
 
     return <AtCard
       className='card'
@@ -185,7 +186,7 @@ class List extends Component<IListProps, IListState> {
       extra={moment(created).format('YYYY-MM-DD')}
       key={title}
       title={title}
-      thumb={status == 'IDLE' ? 'http://q2bvifwjn.bkt.clouddn.com/hornicon.png' : 'http://q2bvifwjn.bkt.clouddn.com/BTCicon.png'}
+      thumb={status == 'IDLE' ? 'http://files.guangzhaiziben.com/hornicon.png' : 'http://files.guangzhaiziben.com/BTCicon.png'}
     >
       {description}
       <View className='flag'>
@@ -198,18 +199,16 @@ class List extends Component<IListProps, IListState> {
         circular
         indicatorDots
         autoplay>
-        <SwiperItem className='swiper-item'>
-          <Image
-            className='img'
-            src='https://t7.baidu.com/it/u=1473459495,4243489015&fm=199&app=68&f=JPEG?w=750&h=750&s=9EB35D87438A1EE80E1134380300E040'
-          />
-        </SwiperItem>
-        <SwiperItem className='swiper-item'>
-          <Image
-            className='img'
-            src='https://ss0.bdstatic.com/-0U0b8Sm1A5BphGlnYG/kmarketingadslogo/0c192ad67cccebb67bbcaef7804f9674_259_194.jpg'
-          />
-        </SwiperItem>
+          {
+            photos.map((url:string)=>
+              <SwiperItem className='swiper-item'>
+              <Image
+                className='img'
+                src={url}
+              />
+              </SwiperItem>
+            )
+          }
       </Swiper>
       <View className="at-row row-call at-row__justify--between">
         <AtButton

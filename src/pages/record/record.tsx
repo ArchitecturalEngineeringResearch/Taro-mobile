@@ -1,13 +1,25 @@
 import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
+import { AtButton, AtModal, AtMessage } from 'taro-ui'
 import { observer } from '@tarojs/mobx'
 
 import './record.scss'
+import { MessageApi } from '../../api'
 
 type PageStateProps = {
 
 }
+
+interface ICard {
+  created: string,
+  type: string,
+  title: string,
+  description: string,
+  status: 'NEED' | 'IDLE',
+  [key: string]: string
+}
+
 
 interface Record {
   props: PageStateProps;
@@ -18,7 +30,9 @@ interface IListProps {
 }
 
 interface IListState {
-  recordDatas: Array<any>
+  recordDatas: Array<ICard>,
+  removeAtModal: boolean
+  current: any
 }
 
 @observer
@@ -27,6 +41,8 @@ class Record extends Component<IListProps, IListState> {
   constructor(props){
     super(props)
     this.state = {
+      removeAtModal: false,
+      current: {},
       recordDatas: []
     }
   }
@@ -39,33 +55,105 @@ class Record extends Component<IListProps, IListState> {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '已发帖子'
   }
 
-  componentWillMount () { }
+  componentWillMount () {
+    this.getHistory()
+  }
 
   componentWillReact () {
     console.log('componentWillReact')
   }
 
-  componentDidMount () { }
 
-  componentWillUnmount () { }
+  getHistory() {
+    const { getStorage} = Taro
 
-  componentDidShow () { }
+    getStorage({ key: 'userInfo' }).then(({data}: any)=> {
+      const { unionId } = data
+      MessageApi.getHistory({unionId}).then((res:any)=> {
+        this.setState({
+          recordDatas: res.data
+        })
+      })
+    })
+  }
 
-  componentDidHide () { }
+  removeHistory() {
+
+  }
+
+  private handleClose () {
+    this.setState({
+      removeAtModal: false
+    })
+  }
+
+  private handleConfirm () {
+   const { current } = this.state
+   const { _id } = current
+    MessageApi.remove(_id).then(()=> {
+      this.setState({
+        removeAtModal: false
+      }, ()=> {
+        Taro.atMessage({
+          'message': '删除成功！',
+          'type': 'success',
+        })
+        this.getHistory()
+      })
+    })
+  }
+
+  private handleCancel () {
+    this.setState({
+      removeAtModal: false
+    })
+  }
+
+  private remove (current) {
+    this.setState({
+      removeAtModal: true,
+      current,
+    })
+  }
 
   render () {
+    const { recordDatas, removeAtModal} = this.state
+
     return (
       <View className='record'>
-        <View className="record-item">
-          <View className='record-item-content'>
-            <View className="record-item__info-title"></View>
-            <View className="record-item__info-note"></View>
-          </View>
-          <View className="record-item-extra"></View>
-        </View>
+        <AtMessage />
+        {
+          recordDatas.map((item)=>
+            <View className="record-item" key={item.title}>
+              <View className='record-item-content'>
+                <View className="record-item__info-title">
+                  {item.title}
+                </View>
+                <View className="record-item__info-note">
+                  {item.description}
+                </View>
+                <View className="record-item__info-note">
+                  {`${item.created} ${item.type} ${item.status === 'NEED' ? '需要' : '限制' }`}
+                </View>
+              </View>
+              <View className="record-item-extra">
+                <AtButton type='primary' size='small' circle={true} onClick={()=> this.remove(item)}>删除</AtButton>
+              </View>
+              <AtModal
+                isOpened={removeAtModal}
+                title='删除提示'
+                cancelText='取消'
+                confirmText='确认'
+                onConfirm={ this.handleConfirm.bind(this) }
+                onClose={ this.handleClose.bind(this) }
+                onCancel={ this.handleCancel.bind(this) }
+                content='是否确认删除？'
+              />
+            </View>)
+        }
       </View>
     )
   }
