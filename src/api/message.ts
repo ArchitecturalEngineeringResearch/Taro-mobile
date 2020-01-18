@@ -16,6 +16,17 @@ const MessageApi = {
       data,
     })
   },
+  getUploadToken: (accessKey: string , secretKey: string, scope: string)=> {
+    return request({
+      url: `${serverURL}/messageList/uploadToken`,
+      method: 'GET',
+      data: {
+        accessKey,
+        secretKey,
+        scope
+      },
+    })
+  },
   remove: (data: any)=> {
     return request({
       url: `${serverURL}/messageList/${data}`,
