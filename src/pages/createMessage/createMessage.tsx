@@ -34,7 +34,9 @@ export interface ICreatemessageState {
   files: Array<any>;
   lat: number;
   lng: number;
-  loading: boolean
+  loading: boolean;
+  upLoadToken: string;
+  upLoadfils: Array<string>
 }
 
 @inject('deviceTypeStore')
@@ -52,7 +54,9 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
       phoneNumber: '',
       status: '',
       files: [],
-      loading: false
+      loading: false,
+      upLoadToken: '',
+      upLoadfils: [], // 已经上传的文件
     }
   }
 
@@ -62,6 +66,7 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
 
   componentWillMount () {
     this.getLocation()
+    this.getUpLoadToken()
   }
 
   componentWillReact () {
@@ -96,6 +101,18 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
     })
   }
 
+  getUpLoadToken () {
+    MessageApi.getUploadToken(
+      'zKFedO2YgtdODJL_e0PasNzLXEk1aMhVMnTZJdsK',
+      'mnUZT-JuivsbhxdXNTMRP7rXMiWdmrgWs5Uwjua_',
+      'iconlogo').then((res: any)=> {
+
+        this.setState({
+          upLoadToken: res.data
+        })
+      })
+  }
+
   handleClose () {}
 
   onDateChange ({currentTarget}) {
@@ -115,7 +132,7 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
       status,
       lat: latitude,
       lng: longitude,
-      files: photos
+      upLoadfils: photos
     } = this.state
 
     const validate = validation(this.state)
@@ -137,10 +154,12 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
       })
       return
     }
+
     const { getStorage} = Taro
     this.setState({
       loading: true
     })
+
     getStorage({ key: 'userInfo' }).then(({data}: any)=> {
       const { openId, unionId } = data
 
@@ -173,6 +192,55 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
       url: '/pages/deviceType/deviceType'
     })
   }
+
+  imagePickeronChange (files: Array<any>, operationType: string, index: any) {
+    console.log(files, operationType,index)
+    const { uploadFile } = Taro
+
+    if (operationType == 'add') {
+      const last = files[files.length - 1]
+      const { upLoadToken } = this.state
+      uploadFile({
+        url: 'https://upload-z2.qiniup.com',
+        filePath: last.url,
+        name: 'file',
+        header: {
+          "Content-Type": "multipart/form-data"
+        },
+        formData: {
+          token: upLoadToken,
+        }
+      }).then(({data})=> {
+        const {hash} = JSON.parse(data)
+
+        const { upLoadfils } = this.state
+        upLoadfils.push(`http://files.guangzhaiziben.com/${hash}`)
+        this.setState({
+          upLoadfils
+        })
+      })
+    }
+
+    if (operationType == 'remove') {
+      const { upLoadfils } = this.state
+      this.setState({
+        upLoadfils: upLoadfils.filter((item, i)=> i != index )
+      })
+    }
+
+    this.setState({
+      files,
+    })
+  }
+
+  onFailonChange (msg: string) {
+    console.log(msg)
+  }
+
+  onImageClick (index: number, file: Object) {
+    console.log(index, file)
+  }
+
 
   render () {
     const { currentType: type } = this.props.deviceTypeStore
@@ -241,9 +309,9 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
           <AtImagePicker
             length={5}
             files={this.state.files}
-            onChange={()=> {}}
-            onFail={()=> {}}
-            onImageClick={()=> {}}
+            onChange={this.imagePickeronChange.bind(this)}
+            onFail={this.onFailonChange.bind(this)}
+            onImageClick={this.onImageClick.bind(this)}
           />
         </AtForm>
         <View className='at-article__info'>
