@@ -143,7 +143,7 @@ class User extends Component<IListProps, IListState> {
           />
         </View>
         <AtGrid onClick={this.handleMenus.bind(this)}className='menus' mode='rect' data={[{
-          image: 'http://q2bvifwjn.bkt.clouddn.com/%E5%8F%91%E9%80%81%E8%AE%B0%E5%BD%95icon.png',
+          image: 'http://files.guangzhaiziben.com/%E5%8F%91%E9%80%81%E8%AE%B0%E5%BD%95icon.png',
           value: '已发帖子'
           }]}
         />
