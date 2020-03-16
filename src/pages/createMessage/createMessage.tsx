@@ -130,7 +130,7 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
       lng: longitude,
       upLoadfils: photos
     } = this.state
-
+    console.log(photos)
     const validate = validation(this.state)
     if(validate) {
       _.forEach(validate, (item)=> {

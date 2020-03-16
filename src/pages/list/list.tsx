@@ -21,7 +21,8 @@ interface ICard {
   title: string,
   description: string,
   type: string,
-  phoneNumber: string | number
+  phoneNumber: string | number,
+  photos: Array<any>,
 }
 
 interface List {
@@ -177,7 +178,7 @@ class List extends Component<IListProps, IListState> {
       created,
       photos = []
     } = card
-    debugger
+
     const flag = status == 'IDLE' ? 'http://files.guangzhaiziben.com/true (123.png' : 'http://files.guangzhaiziben.com/%E9%9C%80%E6%B1%82%E6%97%97%E5%B8%9C'
 
     return <AtCard
