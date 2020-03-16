@@ -1,5 +1,5 @@
 import { ComponentType } from 'react'
-import Taro, { Component, Config } from '@tarojs/taro'
+import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Swiper, SwiperItem } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 import { AtNoticebar, AtCard, AtButton, AtFab, AtMessage } from 'taro-ui'
@@ -57,10 +57,6 @@ class List extends Component<IListProps, IListState> {
     }
   }
 
-  config: Config = {
-    navigationBarTitleText: '首页'
-  }
-
   componentWillMount () {
 
   }
@@ -71,6 +67,10 @@ class List extends Component<IListProps, IListState> {
 
   componentWillReact () {
     console.log('componentWillReact')
+  }
+
+  config: Taro.Config = {
+    navigationBarTitleText: '首页'
   }
 
   onReachBottom() {

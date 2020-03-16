@@ -1,5 +1,5 @@
 import { ComponentType } from 'react'
-import Taro, { Component, Config } from '@tarojs/taro'
+import Taro, { Component } from '@tarojs/taro'
 import { View, Picker } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
 import { AtForm, AtInput, AtRadio, AtButton, AtImagePicker, AtMessage } from 'taro-ui'
@@ -60,17 +60,9 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
     }
   }
 
-  config: Config = {
-    navigationBarTitleText: '首页'
-  }
-
   componentWillMount () {
     this.getLocation()
     this.getUpLoadToken()
-  }
-
-  componentWillReact () {
-    console.log('componentWillReact')
   }
 
   componentDidMount () {
@@ -84,6 +76,10 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
   componentDidShow () { }
 
   componentDidHide () { }
+
+  config: Taro.Config = {
+    navigationBarTitleText: '首页'
+  }
 
   handleChange (status) {
     this.setState({
@@ -327,4 +323,4 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
   }
 }
 
-export default Createmessage  as ComponentType
+export default Createmessage as ComponentType

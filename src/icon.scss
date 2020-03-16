@@ -1,12 +1,12 @@
 /* icon.scss */
-@font-face {
-  font-family: 'FontAwesome';
-  /* 自行安装第三方字体图标库 */
-  src: url('./assets/fonts/fontawesome-webfont.eot?v=4.7.0');
-  src: url('./assets/fonts/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), url('./assets/fonts/fontawesome-webfont.woff?v=4.7.0') format('woff'), url('./assets/fonts/fontawesome-webfont.ttf?v=4.7.0') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
+// @font-face {
+//   font-family: 'FontAwesome';
+//   /* 自行安装第三方字体图标库 */
+//   src: url('./assets/fonts/fontawesome-webfont.eot?v=4.7.0');
+//   src: url('./assets/fonts/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), url('./assets/fonts/fontawesome-webfont.woff?v=4.7.0') format('woff'), url('./assets/fonts/fontawesome-webfont.ttf?v=4.7.0') format('truetype');
+//   font-weight: normal;
+//   font-style: normal;
+// }
 /* 根据第三方字体图标库编写 */
 /* 举例：fa 就是 prefixClass 的值，下面的的图标 css class 命名都要用 fa- 开头  */
 .fa {
