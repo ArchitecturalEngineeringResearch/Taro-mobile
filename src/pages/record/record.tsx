@@ -108,29 +108,29 @@ class Record extends Component<IListProps, IListState> {
       <View className='record'>
         {
           recordDatas.map((item,index)=>
-            <View className="record-item" key={index}>
+            <View className='record-item' key={`${item.title}${index}`}>
               <View className='record-item-content'>
-                <View className="record-item__info-title">
+                <View className='record-item__info-title  '>
                   {item.title}
                 </View>
-                <View className="record-item__info-note">
+                <View className='record-item__info-note '>
                   {item.description}
                 </View>
-                <View className="record-item__info-note">
+                <View className='record-item__info-note '>
                   {`${item.created} ${item.type} ${item.status === 'NEED' ? '需要' : '限制' }`}
                 </View>
               </View>
-              <View className="record-item-extra">
-                <AtButton type='primary' size='small' circle={true} onClick={()=> this.remove(item)}>删除</AtButton>
+              <View className='record-item-extra  '>
+                <AtButton type='primary' size='small' circle onClick={()=> this.remove(item)}>删除</AtButton>
               </View>
               <AtModal
                 isOpened={removeAtModal}
                 title='删除提示'
                 cancelText='取消'
                 confirmText='确认'
-                onConfirm={ this.handleConfirm.bind(this) }
-                onClose={ this.handleClose.bind(this) }
-                onCancel={ this.handleCancel.bind(this) }
+                onConfirm={this.handleConfirm.bind(this)}
+                onClose={this.handleClose.bind(this)}
+                onCancel={this.handleCancel.bind(this)}
                 content='是否确认删除？'
               />
             </View>)
