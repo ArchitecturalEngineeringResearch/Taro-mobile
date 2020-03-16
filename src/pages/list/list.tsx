@@ -2,7 +2,7 @@ import { ComponentType } from 'react'
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Swiper, SwiperItem } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
-import { AtNoticebar, AtCard, AtButton, AtFab, AtMessage } from 'taro-ui'
+import { AtNoticebar, AtCard, AtButton, AtFab } from 'taro-ui'
 import moment from 'moment'
 
 import './list.scss'
@@ -135,16 +135,17 @@ class List extends Component<IListProps, IListState> {
     const userInfo = Taro.getStorage({
       key:'userInfo',
     })
-    const { navigateTo, switchTab,  atMessage } = Taro
+    const { navigateTo, switchTab, showToast } = Taro
+
     userInfo.then(()=> {
       navigateTo({
         url: '/pages/createMessage/createMessage'
       })
-
     }).catch(() => {
-      atMessage({
-        message: `请先登陆`,
-        type: 'error',
+
+      showToast({
+        title: `请先登陆`,
+        icon: 'none',
       })
 
       setTimeout(()=> {
@@ -219,7 +220,6 @@ class List extends Component<IListProps, IListState> {
           onClick={()=> {this.phoneCall(String(phoneNumber))}}
         >拨打电话</AtButton>
       </View>
-      <AtMessage />
     </AtCard>
   }
 

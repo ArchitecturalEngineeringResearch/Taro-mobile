@@ -2,7 +2,7 @@ import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Button } from '@tarojs/components'
 import { observer } from '@tarojs/mobx'
-import { AtAvatar, AtDivider, AtGrid, AtModal, AtModalHeader, AtModalContent, AtModalAction, AtMessage } from 'taro-ui'
+import { AtAvatar, AtDivider, AtGrid, AtModal, AtModalHeader, AtModalContent, AtModalAction } from 'taro-ui'
 
 import './user.scss'
 import { UserApi } from '../../api/index'
@@ -74,7 +74,7 @@ class User extends Component<IListProps, IListState> {
   }
 
   getUserInfo () {
-    const { setStorage, atMessage, login, getUserInfo } = Taro
+    const { setStorage, login, getUserInfo } = Taro
     const { loading } = this.state
     // 如果属于登陆中
     if( loading ) {
@@ -103,10 +103,9 @@ class User extends Component<IListProps, IListState> {
               atModalIsOpened: false,
               loading: false,
             })
-
-            atMessage({
-              'message': '登陆成功！',
-              'type': 'success',
+            Taro.showToast({
+              title: `登陆成功！`,
+              icon: 'success',
             })
             this.loadUserInfo()
           })
@@ -162,7 +161,6 @@ class User extends Component<IListProps, IListState> {
             </Button>
           </AtModalAction>
         </AtModal>
-        <AtMessage />
       </View>
     )
   }

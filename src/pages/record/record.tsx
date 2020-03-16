@@ -1,7 +1,7 @@
 import { ComponentType } from 'react'
 import Taro, { Component } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { AtButton, AtModal, AtMessage } from 'taro-ui'
+import { AtButton, AtModal } from 'taro-ui'
 import { observer } from '@tarojs/mobx'
 
 import './record.scss'
@@ -96,9 +96,9 @@ class Record extends Component<IListProps, IListState> {
       this.setState({
         removeAtModal: false
       }, ()=> {
-        Taro.atMessage({
-          'message': '删除成功！',
-          'type': 'success',
+        Taro.showToast({
+          title: `删除成功！`,
+          icon: 'success',
         })
         this.getHistory()
       })
@@ -123,7 +123,6 @@ class Record extends Component<IListProps, IListState> {
 
     return (
       <View className='record'>
-        <AtMessage />
         {
           recordDatas.map((item,index)=>
             <View className='record-item' key={`${item.title}${index}`}>

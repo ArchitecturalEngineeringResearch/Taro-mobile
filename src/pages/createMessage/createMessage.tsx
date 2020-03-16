@@ -2,8 +2,7 @@ import { ComponentType } from 'react'
 import Taro, { Component } from '@tarojs/taro'
 import { View, Picker } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
-import { AtForm, AtInput, AtRadio, AtButton, AtImagePicker, AtMessage } from 'taro-ui'
-import _ from 'lodash'
+import { AtForm, AtInput, AtRadio, AtButton, AtImagePicker } from 'taro-ui'
 
 import validation from './validation'
 import './createMessage.scss'
@@ -133,20 +132,20 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
     console.log(photos)
     const validate = validation(this.state)
     if(validate) {
-      _.forEach(validate, (item)=> {
+      validate.forEach((item)=> {
         const [ firstMessage ] = item
-        Taro.atMessage({
-          message: `错误通知: ${firstMessage}`,
-          type: 'error',
+        Taro.showToast({
+          title: `错误通知: ${firstMessage}`,
+          icon: 'none',
         })
       })
       return
     }
 
     if(type == '全部') {
-      Taro.atMessage({
-        message: `错误通知: 请选择设备类型`,
-        type: 'error',
+      Taro.showToast({
+        title: `错误通知: 请选择设备类型`,
+        icon: 'none',
       })
       return
     }
@@ -172,9 +171,9 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
         openId,
         unionId,
       }).then(()=> {
-        Taro.atMessage({
-          'message': '发送成功！',
-          'type': 'success',
+        Taro.showToast({
+          title: '发送成功！',
+          icon: 'success',
         })
         setTimeout(()=> {
           Taro.navigateBack({ delta: 1 })
@@ -243,7 +242,6 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
     const { loading } = this.state
     return (
       <View className='createMessage'>
-        <AtMessage />
         <AtForm>
           <View className='at-row at-row__justify--between device-type-box'>
             <View className='at-col at-col-5 device-type'>
@@ -265,7 +263,7 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
             type='text'
             placeholder='请输入标题'
             value={this.state.title}
-            onChange={(title)=> this.setState({title})}
+            onChange={(title: string)=> this.setState({title})}
           />
           <AtInput
             name='value'
@@ -273,7 +271,7 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
             type='text'
             placeholder='请输入详情描述'
             value={this.state.description}
-            onChange={(description)=> this.setState({description})}
+            onChange={(description: string)=> this.setState({description})}
           />
           <View className='picker-box'>
             <Picker value='' mode='date' onChange={this.onDateChange}>
@@ -288,7 +286,7 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
             title='手机号码'
             type='phone'
             placeholder='请输入手机号码'
-            value={this.state.phoneNumber}
+            value={this.state.phoneNumber as string}
             onChange={(phoneNumber)=> this.setState({phoneNumber})}
           />
           <AtRadio
