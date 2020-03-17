@@ -1,8 +1,8 @@
 import { ComponentType } from 'react'
-import Taro, { Component, Config } from '@tarojs/taro'
+import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Swiper, SwiperItem } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
-import { AtNoticebar, AtCard, AtButton, AtFab, AtMessage } from 'taro-ui'
+import { AtNoticebar, AtCard, AtButton, AtFab } from 'taro-ui'
 import moment from 'moment'
 
 import './list.scss'
@@ -21,7 +21,8 @@ interface ICard {
   title: string,
   description: string,
   type: string,
-  phoneNumber: string | number
+  phoneNumber: string | number,
+  photos: Array<any>,
 }
 
 interface List {
@@ -57,10 +58,6 @@ class List extends Component<IListProps, IListState> {
     }
   }
 
-  config: Config = {
-    navigationBarTitleText: '首页'
-  }
-
   componentWillMount () {
 
   }
@@ -71,6 +68,10 @@ class List extends Component<IListProps, IListState> {
 
   componentWillReact () {
     console.log('componentWillReact')
+  }
+
+  config: Taro.Config = {
+    navigationBarTitleText: '首页'
   }
 
   onReachBottom() {
@@ -134,16 +135,17 @@ class List extends Component<IListProps, IListState> {
     const userInfo = Taro.getStorage({
       key:'userInfo',
     })
-    const { navigateTo, switchTab,  atMessage } = Taro
+    const { navigateTo, switchTab, showToast } = Taro
+
     userInfo.then(()=> {
       navigateTo({
         url: '/pages/createMessage/createMessage'
       })
-
     }).catch(() => {
-      atMessage({
-        message: `请先登陆`,
-        type: 'error',
+
+      showToast({
+        title: `请先登陆`,
+        icon: 'none',
       })
 
       setTimeout(()=> {
@@ -177,7 +179,7 @@ class List extends Component<IListProps, IListState> {
       created,
       photos = []
     } = card
-    debugger
+
     const flag = status == 'IDLE' ? 'http://files.guangzhaiziben.com/true (123.png' : 'http://files.guangzhaiziben.com/%E9%9C%80%E6%B1%82%E6%97%97%E5%B8%9C'
 
     return <AtCard
@@ -218,7 +220,6 @@ class List extends Component<IListProps, IListState> {
           onClick={()=> {this.phoneCall(String(phoneNumber))}}
         >拨打电话</AtButton>
       </View>
-      <AtMessage />
     </AtCard>
   }
 

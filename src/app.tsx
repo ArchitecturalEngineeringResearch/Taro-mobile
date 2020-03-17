@@ -1,11 +1,11 @@
-import Taro, { Component, Config } from '@tarojs/taro'
+import Taro, { Component } from '@tarojs/taro'
 import { Provider } from '@tarojs/mobx'
 import 'taro-ui/dist/style/index.scss'
 
 import deviceTypeStore from './store/deviceType'
 
 
-import './icon.scss'
+// import './icon.scss'
 import './app.scss'
 
 const store = {
@@ -23,7 +23,7 @@ class App extends Component {
 
   componentDidCatchError () {}
 
-  config: Config = {
+  config: Taro.Config = {
     pages: [
       'pages/list/list',
       'pages/record/record',
