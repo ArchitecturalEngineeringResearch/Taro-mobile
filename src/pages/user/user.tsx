@@ -24,7 +24,7 @@ class User extends Component<IListProps, IListState> {
     super(props)
     this.state = {
       atModalIsOpened: false,
-      avatarUrl: 'https://jdc.jd.com/img/200',
+      avatarUrl: 'https://files.guangzhaiziben.com/%E6%88%AA%E5%B1%8F2020-04-04%20%E4%B8%8A%E5%8D%8811.18.58.png',
       userName: '未登陆',
       loading: false,
     }
@@ -60,7 +60,6 @@ class User extends Component<IListProps, IListState> {
   }
 
   handleMenus(item) {
-    console.log(item.value)
     switch (item.value) {
       case '已发帖子':
         Taro.navigateTo({
@@ -115,6 +114,7 @@ class User extends Component<IListProps, IListState> {
   }
 
   loadUserInfo () {
+
     Taro.getStorage({
       key: 'userInfo'
     }).then(({data}: any)=> {
@@ -147,7 +147,7 @@ class User extends Component<IListProps, IListState> {
           }]}
         />
         <AtModal isOpened={atModalIsOpened}>
-          <AtModalHeader>欢迎使用【工程酷】</AtModalHeader>
+          <AtModalHeader>欢迎使用，请勿发送违规图片和信息</AtModalHeader>
           <AtModalContent>
             使用微信号登陆,将会同步你的微信头像和名称
           </AtModalContent>

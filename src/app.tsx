@@ -3,7 +3,7 @@ import { Provider } from '@tarojs/mobx'
 import 'taro-ui/dist/style/index.scss'
 
 import deviceTypeStore from './store/deviceType'
-
+import { BaiduApi } from './api'
 
 // import './icon.scss'
 import './app.scss'
@@ -14,7 +14,7 @@ const store = {
 
 class App extends Component {
   componentDidMount () {
-
+    this.getbaidubceToken()
   }
 
   componentDidShow () {}
@@ -63,6 +63,20 @@ class App extends Component {
     }
   }
 
+  private getbaidubceToken() {
+    BaiduApi.access_token({
+      'grant_type': 'client_credentials',
+      'client_id': 'nMjd3oR1e6H6Vdgu8wK4bwIO', // api key
+      'client_secret': 'pjO4G8A2MlmWcBheNK4CTG5BmyNxkLLq' // Secret Key
+    }).then((res:any)=> {
+      if(res.data.access_token) {
+        Taro.setStorage({
+          key: 'baidu_access_token',
+          data: res.data
+        })
+      }
+    })
+  }
 
   // 在 App 类中的 render() 函数没有实际作用
   // 请勿修改此函数

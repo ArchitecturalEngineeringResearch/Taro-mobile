@@ -228,7 +228,7 @@ class List extends Component<IListProps, IListState> {
     const { deviceTypeStore: {currentType} } = this.props
     return (
       <View>
-        <View className='list'>
+        <View className='list-top'>
           <View className='at-row filter'>
             <View
               className='at-col'
