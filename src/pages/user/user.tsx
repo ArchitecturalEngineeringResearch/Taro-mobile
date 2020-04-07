@@ -147,7 +147,7 @@ class User extends Component<IListProps, IListState> {
           }]}
         />
         <AtModal isOpened={atModalIsOpened}>
-          <AtModalHeader>欢迎使用【工程酷】</AtModalHeader>
+          <AtModalHeader>欢迎使用，请勿发送违规图片和信息</AtModalHeader>
           <AtModalContent>
             使用微信号登陆,将会同步你的微信头像和名称
           </AtModalContent>
