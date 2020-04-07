@@ -6,7 +6,7 @@ import { AtForm, AtInput, AtRadio, AtButton, AtImagePicker } from 'taro-ui'
 
 import validation from './validation'
 import './createMessage.scss'
-import { MessageApi } from '../../api'
+import { MessageApi, BaiduApi } from '../../api'
 
 
 type PageStateProps = {
@@ -129,16 +129,15 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
       lng: longitude,
       upLoadfils: photos
     } = this.state
-    console.log(photos)
+
     const validate = validation(this.state)
     if(validate) {
-      validate.forEach((item)=> {
-        const [ firstMessage ] = item
+      for (let item in validate) {
         Taro.showToast({
-          title: `错误通知: ${firstMessage}`,
+          title: `错误通知: ${validate[item]}`,
           icon: 'none',
         })
-      })
+      }
       return
     }
 
@@ -153,6 +152,11 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
     const { getStorage} = Taro
     this.setState({
       loading: true
+    })
+
+    Taro.showLoading({
+      title: '提交中...',
+      mask: true
     })
 
     getStorage({ key: 'userInfo' }).then(({data}: any)=> {
@@ -170,14 +174,30 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
         photos,
         openId,
         unionId,
-      }).then(()=> {
+      }).then((res)=> {
+        console.log(res.statusCode)
+
+        if(res.statusCode == 412) {
+          Taro.hideLoading()
+          Taro.showToast({
+            title: res.data.errors,
+            icon: 'none',
+          })
+          this.setState({
+            loading: false
+          })
+          return
+        }
+        Taro.hideLoading()
+
         Taro.showToast({
           title: '发送成功！',
           icon: 'success',
         })
+
         setTimeout(()=> {
           Taro.navigateBack({ delta: 1 })
-        }, 2000)
+        }, 1000)
       })
     })
   }
@@ -189,7 +209,6 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
   }
 
   imagePickeronChange (files: Array<any>, operationType: string, index: any) {
-    console.log(files, operationType,index)
     const { uploadFile } = Taro
 
     if (operationType == 'add') {
@@ -209,9 +228,30 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
         const {hash} = JSON.parse(data)
 
         const { upLoadfils } = this.state
-        upLoadfils.push(`http://files.guangzhaiziben.com/${hash}`)
-        this.setState({
-          upLoadfils
+        const imgUrl = `http://files.guangzhaiziben.com/${hash}`
+
+        Taro.showLoading({
+          title: '检查中...',
+          mask: true
+        })
+
+        BaiduApi.user_defined(imgUrl, Taro.getStorageSync('baidu_access_token').access_token).then((res)=> {
+          const { conclusion = '', conclusionType = ''} = res.data
+          Taro.hideLoading()
+          Taro.showToast({
+              title: `图片识别:${conclusion}`,
+              icon: 'none',
+              duration: 2000
+            })
+
+          // 1：合规，2：不合规，3：疑似，4：审核失败
+          if (conclusionType != 1) return
+
+          upLoadfils.push(imgUrl)
+          this.setState({
+            upLoadfils,
+            files,
+          })
         })
       })
     }
@@ -219,13 +259,10 @@ class Createmessage extends Component<ICreatemessageProps, ICreatemessageState> 
     if (operationType == 'remove') {
       const { upLoadfils } = this.state
       this.setState({
-        upLoadfils: upLoadfils.filter((item, i)=> i != index )
+        upLoadfils: upLoadfils.filter((item, i)=> i != index ),
+        files
       })
     }
-
-    this.setState({
-      files,
-    })
   }
 
   onFailonChange (msg: string) {

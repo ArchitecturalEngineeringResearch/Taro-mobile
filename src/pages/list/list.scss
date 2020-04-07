@@ -1,4 +1,9 @@
-.list {
+.list-top {
+
+  position: fixed;
+  z-index: 999;
+  width: 100vw;
+  top: 0px;
 
   .filter {
     color: #fff;
@@ -6,7 +11,7 @@
     font-size: 25px;
     border-bottom: 1px solid #ccc;
     padding: 2vh;
-    background: #FE7F2D;
+    background-image: linear-gradient(90deg,#fd962d,#ff6b23);
   }
 
   &-messages {
@@ -44,6 +49,7 @@
 }
 
 .list-messages {
+  margin-top:140px;
 
   .at-card {
     border: 0 #d6e4ef solid;
@@ -78,4 +84,7 @@
   right: 20px;
   bottom: 10vh;
   z-index: 100;
+  .at-fab {
+    background-image: linear-gradient(90deg,#fd962d,#ff6b23);
+  }
 }

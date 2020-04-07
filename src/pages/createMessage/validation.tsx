@@ -3,7 +3,7 @@ import { ICreatemessageState } from './createMessage'
 
 var validate = require("validate.js");
 
-var constraints : Record<keyof ICreatemessageState, any> = {
+const constraints : Record<keyof ICreatemessageState, any> = {
   title: {
     presence: true,
     length: {
