@@ -168,6 +168,12 @@ class List extends Component<IListProps, IListState> {
     })
   }
 
+  previewImage (url) {
+    Taro.previewImage({
+      urls:[url],
+    })
+  }
+
   renderCard(card: ICard) {
     const {
       title,
@@ -207,6 +213,7 @@ class List extends Component<IListProps, IListState> {
               <Image
                 className='img'
                 src={url}
+                onClick={this.previewImage.bind(this,url)}
               />
               </SwiperItem>
             )
@@ -244,7 +251,7 @@ class List extends Component<IListProps, IListState> {
             </View>
           </View>
           <AtNoticebar marquee>
-            欢迎使用【工程酷】 欢迎使用【工程酷】 欢迎使用【工程酷】
+            欢迎使用【机凭邦】 欢迎使用【机凭邦】 欢迎使用【机凭邦】
           </AtNoticebar>
         </View>
         <View className="list-messages">
