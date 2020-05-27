@@ -80,12 +80,12 @@ class List extends Component<IListProps, IListState> {
 
   componentDidShow() {
     this.getCity()
-    this.setState({
-      currentPage: 1,
-      messagesData: []
-    },()=> {
-      this.nextPage()
-    })
+    // this.setState({
+    //   currentPage: 1,
+    //   messagesData: []
+    // },()=> {
+    //   this.nextPage()
+    // })
   }
 
   filterHandle () {
