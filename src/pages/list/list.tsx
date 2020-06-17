@@ -54,7 +54,7 @@ class List extends Component<IListProps, IListState> {
       currentPage: 1,
       pageSzie: 5,
       messagesData: [],
-      currentCity: '',
+      currentCity: '眉山市东坡区',
     }
   }
 
@@ -172,6 +172,17 @@ class List extends Component<IListProps, IListState> {
     Taro.previewImage({
       urls:[url],
     })
+  }
+
+  onShareAppMessage (res) {
+    if (res.from === 'button') {
+      // 来自页面内转发按钮
+      console.log(res.target)
+    }
+    return {
+      title: '我发布了一个工程车辆快来看看吧',
+      path: 'pages/list/list'
+    }
   }
 
   renderCard(card: ICard) {
