@@ -1,7 +1,7 @@
 import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { AtGrid, AtTabs, AtTabsPane } from "taro-ui"
+import { AtGrid, AtTabs, AtTabsPane, AtButton } from "taro-ui"
 import { observer, inject } from '@tarojs/mobx'
 
 import './deviceType.scss'
@@ -60,13 +60,14 @@ class Devicetype extends Component <IDevicetypeProps, IDevicetypeState>{
   componentDidHide () { }
 
   handleClick (value) {
-    if(value === 0) {
-      this.props.deviceTypeStore.setCurrentType('全部')
-      Taro.navigateBack({ delta: 1 })
-    }
     this.setState({
       currentTabs: value
     })
+  }
+
+  handleAll() {
+    this.props.deviceTypeStore.setCurrentType('全部')
+    Taro.navigateBack({ delta: 1 })
   }
 
   handleClickAtGrid (item: any) {
@@ -90,9 +91,12 @@ class Devicetype extends Component <IDevicetypeProps, IDevicetypeState>{
             { title: '高空作业' },
             { title: '工业车辆' }
           ]}
-          onClick={this.handleClick.bind(this)}>
+          onClick={this.handleClick.bind(this)}
+        >
           <AtTabsPane current={this.state.currentTabs} index={0}>
-          <AtGrid data={[]}/>
+            <View className='allType'>
+              <AtButton onClick={this.handleAll.bind(this)} type='primary'>选择全部车辆类型</AtButton>
+            </View>
           </AtTabsPane>
           <AtTabsPane current={this.state.currentTabs} index={1}>
           <AtGrid data={deviceTypes.筑养路机械} onClick={this.handleClickAtGrid.bind(this)} />
