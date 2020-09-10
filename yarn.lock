@@ -1327,13 +1327,6 @@
   dependencies:
     "@tarojs/utils" "2.0.3"
 
-"@tarojs/taro@^2.0.3":
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/@tarojs/taro/-/taro-2.0.7.tgz#eeb8d998fbc66c5b55eec371bc3506a22aad0e43"
-  integrity sha512-W/l7LdyNCX/JE9o4y3O2XgM1RYlG2M8h0bqsd7R7pLIN+yL8EKmaG6Ok8xJqN8g9/QcwPI85T04VbLVg/Gebbg==
-  dependencies:
-    "@tarojs/utils" "2.0.7"
-
 "@tarojs/transformer-wx@2.0.3":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@tarojs/transformer-wx/-/transformer-wx-2.0.3.tgz#e7e51479797dbeff68d2e917526e12a5f118b975"
@@ -1369,11 +1362,6 @@
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@tarojs/utils/-/utils-2.0.3.tgz#403be7621fbc7b0a6cd5276b68cb934091d3312b"
   integrity sha512-7g4eAfsBZnymE2OxsQnkW27nhbFraAwdBFo7ttVrKl3+AE3QLthO2Ho1Mrx5exXcYfDvgaBk8v6WK0Aw0CGUTQ==
-
-"@tarojs/utils@2.0.7":
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/@tarojs/utils/-/utils-2.0.7.tgz#f6d916e2346bef62dee1e9f1340849ec30828834"
-  integrity sha512-G1bTxpGLIXaEI/zfJWKOk8cFFtQC0jxTWQsbT/iUtPrv9gltC/VvOHg/pCRMqY+7lCM0wmmA6a1x+q7/7Fd22w==
 
 "@tarojs/webpack-runner@2.0.3":
   version "2.0.3"
@@ -5282,9 +5270,9 @@ etag@~1.8.1:
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
 eventemitter3@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.npm.taobao.org/eventemitter3/download/eventemitter3-4.0.0.tgz#d65176163887ee59f386d64c82610b696a4a74eb"
-  integrity sha1-1lF2FjiH7lnzhtZMgmELaWpKdOs=
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
+  integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
 events@^3.0.0:
   version "3.0.0"
@@ -5806,11 +5794,9 @@ flush-write-stream@^1.0.0:
     readable-stream "^2.3.6"
 
 follow-redirects@^1.0.0, follow-redirects@^1.2.3:
-  version "1.9.0"
-  resolved "https://registry.npm.taobao.org/follow-redirects/download/follow-redirects-1.9.0.tgz#8d5bcdc65b7108fe1508649c79c12d732dcedb4f"
-  integrity sha1-jVvNxltxCP4VCGScecEtcy3O208=
-  dependencies:
-    debug "^3.0.0"
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.13.0.tgz#b42e8d93a2a7eea5ed88633676d6597bc8e384db"
+  integrity sha512-aq6gF1BEKje4a9i9+5jimNFIpq4Q1WiwBToeRK5NvZBd/TRsmW8BsJfOEGkr76TbOyPVD3OVDN910EcUNtRYEA==
 
 for-in@^0.1.3:
   version "0.1.8"
@@ -6556,9 +6542,9 @@ http-proxy-middleware@~0.18.0:
     micromatch "^3.1.9"
 
 http-proxy@^1.16.2:
-  version "1.18.0"
-  resolved "https://registry.npm.taobao.org/http-proxy/download/http-proxy-1.18.0.tgz#dbe55f63e75a347db7f3d99974f2692a314a6a3a"
-  integrity sha1-2+VfY+daNH2389mZdPJpKjFKajo=
+  version "1.18.1"
+  resolved "https://registry.yarnpkg.com/http-proxy/-/http-proxy-1.18.1.tgz#401541f0534884bbf95260334e72f88ee3976549"
+  integrity sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==
   dependencies:
     eventemitter3 "^4.0.0"
     follow-redirects "^1.0.0"
@@ -8535,32 +8521,32 @@ neo-async@^2.5.0, neo-async@^2.6.1:
   resolved "https://registry.npm.taobao.org/neo-async/download/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
   integrity sha1-rCetpmFn+ohJpq3dg39rGJrSCBw=
 
-nerv-devtools@^1.4.0:
-  version "1.5.4"
-  resolved "https://registry.npm.taobao.org/nerv-devtools/download/nerv-devtools-1.5.4.tgz#d78b5f214ca9907acbf8002fdca91452d07373c5"
-  integrity sha1-14tfIUypkHrL+AAv3KkUUtBzc8U=
+nerv-devtools@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/nerv-devtools/-/nerv-devtools-1.4.0.tgz#5f59eabfc1dd9567f15dd551c9aa15eb2629d7a2"
+  integrity sha512-g8wqxN7rlu4LM72co/rvP9yEFTW4qEadKDqqSQZEGdik0KgM1onEZZPqW+uGgkQ5t7sN9zV3heYcWT8ktVXF0Q==
   dependencies:
     nerv-shared "1.4.0"
-    nerv-utils "1.4.5"
-    nervjs "1.5.4"
+    nerv-utils "1.4.0-beta.5"
+    nervjs "1.4.0"
 
 nerv-shared@1.4.0:
   version "1.4.0"
   resolved "https://registry.npm.taobao.org/nerv-shared/download/nerv-shared-1.4.0.tgz#4ae903f215888ab886b3d04ae3b95d5327e67f43"
   integrity sha1-SukD8hWIiriGs9BK47ldUyfmf0M=
 
-nerv-utils@1.4.5:
-  version "1.4.5"
-  resolved "https://registry.npm.taobao.org/nerv-utils/download/nerv-utils-1.4.5.tgz#3e017a8a1b605b35ee31ad396a038207fbc597b0"
-  integrity sha1-PgF6ihtgWzXuMa05agOCB/vFl7A=
+nerv-utils@1.4.0-beta.5:
+  version "1.4.0-beta.5"
+  resolved "https://registry.yarnpkg.com/nerv-utils/-/nerv-utils-1.4.0-beta.5.tgz#9630c858fce0a77b4c328d91ba120a1e0db96297"
+  integrity sha512-XxCpJogZmyh+zBhHCfCG8ImhMHI3SP2/0jK4wx4j0c0FaTNXTkL44+mph6qEklW5ToW3Iq/EqmJZCmKZQVQTPw==
 
-nervjs@1.5.4, nervjs@^1.4.0:
-  version "1.5.4"
-  resolved "https://registry.npm.taobao.org/nervjs/download/nervjs-1.5.4.tgz#a2aa175774c26174f6eabced47c626db5c532b9d"
-  integrity sha1-oqoXV3TCYXT26rztR8Ym21xTK50=
+nervjs@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/nervjs/-/nervjs-1.4.0.tgz#dd5df50d6dbf6ba2f2129d1a5f96deb8e09df4b4"
+  integrity sha512-Bz0iQo0F9ozsc78iXsEY16uCnQv58zhpHnLwPHq/JQ0Wb1E6nRGWGt3IKUSfSS6HPh1kw4LVVETdF8VHzF+LCQ==
   dependencies:
     nerv-shared "1.4.0"
-    nerv-utils "1.4.5"
+    nerv-utils "1.4.0-beta.5"
 
 netmask@^1.0.6:
   version "1.0.6"
@@ -10607,7 +10593,7 @@ require-main-filename@^2.0.0:
 
 requires-port@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.npm.taobao.org/requires-port/download/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
+  resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
   integrity sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=
 
 reselect@^3.0.1:
@@ -11882,10 +11868,10 @@ tar@^4, tar@^4.0.2:
     safe-buffer "^5.1.2"
     yallist "^3.0.3"
 
-taro-ui@^2.2.4:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/taro-ui/-/taro-ui-2.3.1.tgz#d2107700492a36dc4e0d53bb11525a0da4892fec"
-  integrity sha512-19VrENHcRu4loippdFnwECYeJIyOOyseg5FLJiCTrZu+rvWw02xUbOnWdnIn6aHmaUKVfWGN5LmI1DJgZaa4XQ==
+taro-ui@2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/taro-ui/-/taro-ui-2.2.4.tgz#96a486432e86d6d0d1eda70383c47c3284f5e8e6"
+  integrity sha512-EkVxp6eWnz5QLqf89Z3OVrVBZK5bvr1RgrP5ABFNizA+sMYdjHqJRV0O07Ulmj+whGLckCF5ACeE1Q4+E7iMCg==
   dependencies:
     "@types/react" "^16.7.3"
     bind-decorator "^1.0.11"
